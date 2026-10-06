@@ -13,6 +13,12 @@
 html,body{height:100%}
 body{margin:0;background:var(--void);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 textarea{-webkit-user-select:text;user-select:text;touch-action:auto}
+#sheetBody .seg button{font-size:14px;padding:8px 14px;border-radius:18px}.seg button.off{opacity:.35;cursor:default}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin:12px 0;max-height:250px;overflow-y:auto;padding:2px}
+.wgrid button{font:800 15px var(--body);color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:8px;padding:9px 0;cursor:pointer;position:relative}
+.wgrid button.boss{color:var(--danger)}.wgrid button.on{background:var(--gold);color:#1a1206;border-color:var(--gold)}
+.wgrid button.no{opacity:.28;cursor:default}
+.wgrid button.cp::after{content:'';position:absolute;right:5px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--good)}
 .recap{margin:10px 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(239,111,90,.07)}
 .recap .rrow{display:grid;grid-template-columns:30px 150px 1fr 44px;align-items:center;gap:8px;margin-top:5px}
 .recap .rrow img,.recap .rph{width:30px;height:30px;object-fit:contain}
@@ -236,6 +242,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;color:var(--dim);bord
    <div class="menu">
     <button class="btn big primary" id="btnContinue" type="button" hidden></button>
     <button class="btn big" id="btnNew" type="button">New run</button>
+    <button class="btn big" id="btnWaves" type="button" hidden><span>Choose a wave</span><span class="pill" id="wavePill"></span></button>
     <button class="btn big" id="btnLegacy" type="button"><span>Legacy</span><span class="pill" id="crownPill"></span></button>
     <button class="btn big ghost" id="btnHow" type="button">How to play</button>
    </div>
@@ -1692,7 +1699,7 @@ function newRun(){
   enemies:[],allies:[],proj:[],zones:[],riders:[],chests:[],timers:[],queue:[],waveT:0,waveInfo:null,next:null,time:0,sun:.3,night:1,biome:0,
   cd:{},armed:null,buffs:{rally:0,storm:0,stormT:0},speed:1,paused:false,auto:false,autoT:0,slow:0,
   stats:{kills:0,gold:0,dmg:0,bosses:0,time:0},relics:[],relicChoice:null,phoenixUsed:false,eid:1,sel:-1,defeatT:0,spawned:0,ui:true,mx:640,my:400,
-  smiteIdle:3,smiteN:0,wrath:0,wrathLock:0,hold:false,wallBy:{},critWarned:false};
+  startWave:0,bossBase:0,relicPicks:0,smiteIdle:3,smiteN:0,wrath:0,wrathLock:0,hold:false,wallBy:{},critWarned:false};
  recalc();G.wallHp=G.wallMax;
  G.slots[1]=mkUnit('archer');G.slots[1].spent=UNITS.archer.cost;
  const extra=[0,2];for(let i=0;i<leg('l_guard');i++){G.slots[extra[i]]=mkUnit('archer');G.slots[extra[i]].spent=UNITS.archer.cost}
@@ -1701,18 +1708,38 @@ function newRun(){
 }
 function saveRun(){
  if(!G||G.phase!=='build')return;
- Store.set('htw_run',{v:2,wave:G.wave,gold:G.gold,renown:G.renown,wallHp:G.wallHp,fort:G.fort,owned:G.owned,stats:G.stats,auto:G.auto,speed:G.speed,relics:G.relics,relicChoice:G.relicChoice,phoenixUsed:G.phoenixUsed,
+ Store.set('htw_run',snapshot());
+}
+function snapshot(){
+ return({v:2,start:G.startWave,bossBase:G.bossBase,relicPicks:G.relicPicks,wave:G.wave,gold:G.gold,renown:G.renown,wallHp:G.wallHp,fort:G.fort,owned:G.owned,stats:G.stats,auto:G.auto,speed:G.speed,relics:G.relics,relicChoice:G.relicChoice,phoenixUsed:G.phoenixUsed,
   slots:G.slots.map(u=>u?{type:u.type,lvl:u.lvl,spec:u.spec,kills:u.kills,spent:u.spent,mode:u.mode,dealt:Math.round(u.dealt||0)}:null)});
 }
-function loadRun(){
- const s=Store.get('htw_run',null);if(!s||s.v!==2)return false;
+function loadRun(obj){
+ const s=obj||Store.get('htw_run',null);if(!s||s.v!==2)return false;
  try{
   newRun();G.wave=s.wave;G.gold=s.gold;G.renown=s.renown;G.fort=s.fort||0;G.owned={keep:1};for(const id in s.owned)if(NODE[id])G.owned[id]=1;
-  G.stats=Object.assign(G.stats,s.stats||{});G.auto=!!s.auto;G.speed=s.speed||1;G.relics=(s.relics||[]).filter(id=>RELIC[id]);G.relicChoice=s.relicChoice&&s.relicChoice.every(id=>RELIC[id])?s.relicChoice:null;G.phoenixUsed=!!s.phoenixUsed;
+  G.stats=Object.assign(G.stats,s.stats||{});G.auto=!!s.auto;G.speed=s.speed||1;G.relics=(s.relics||[]).filter(id=>RELIC[id]);G.relicChoice=s.relicChoice&&s.relicChoice.every(id=>RELIC[id])?s.relicChoice:null;G.phoenixUsed=!!s.phoenixUsed;G.startWave=s.start||0;G.bossBase=s.bossBase||0;G.relicPicks=s.relicPicks||0;
   G.slots=SLOTS.map((_,i)=>{const d=s.slots[i];if(!d||!UNITS[d.type])return null;const u=mkUnit(d.type);u.lvl=d.lvl;u.spec=d.spec;u.kills=d.kills||0;u.spent=d.spent||0;u.mode=d.mode||u.mode;u.dealt=d.dealt||0;return u});
   G.wallMax=0;recalc();G.wallHp=clamp(s.wallHp,1,G.wallMax);
   G.biome=Math.floor(G.wave/10)%BIOMES.length;G.next=genWave(G.wave+1);return true;
  }catch(e){return false}
+}
+/* ---------- checkpoints and the wave picker ---------- */
+/* Every wave you clear leaves a checkpoint of the castle as it stood. The picker can restore one, or start a fresh castle with a war chest. */
+const checkpoints=()=>Store.get('htw_cp',{})||{};
+function saveCheckpoint(){const cp=checkpoints();cp[G.wave]=snapshot();Store.set('htw_cp',cp)}
+function rollRelics(){const pool=shuffle(RELICS.filter(r=>!G.relics.includes(r.id)).map(r=>r.id));G.relicChoice=pool.length?pool.slice(0,3):null}
+/* roughly what an ordinary run has earned after n waves, measured from test runs, less a tenth */
+const chestGold=n=>Math.round((60*n+1.2*n*n*n)*.9),chestRenown=n=>Math.round((1.5*n+.28*n*n)*.9);
+const maxStartWave=()=>Math.max(1,(META.best||0)+1);
+function startAt(W,own){
+ W=clamp(W|0,1,maxStartWave());const n=W-1,cp=checkpoints()[n];
+ if(!(own&&cp&&loadRun(cp))){
+  newRun();
+  if(n>0){G.wave=n;G.gold+=chestGold(n);G.renown+=chestRenown(n);G.biome=Math.floor(n/10)%BIOMES.length;G.next=genWave(W);
+   const picks=Math.floor(n/5);if(picks){rollRelics();G.relicPicks=picks-1}}
+ }
+ G.startWave=n;G.bossBase=G.stats.bosses||0;saveRun();
 }
 const hasSave=()=>{const s=Store.get('htw_run',null);return !!(s&&s.v===2)};
 
@@ -1817,7 +1844,7 @@ function spawnAllies(){
   G.allies.push({x:WALL_X+10,post:base+(i%4)*30+Math.floor(i/4)*13+rand(-4,4),lane:2+(i*11)%25,hp,max:hp,dmg:9*Math.pow(hpMul(n),.85)*(M.knights?2:1)*(1+M.dmgPct),rate:.9,atkT:rand(.5),walk:rand(TAU),state:'walk',knight:!!M.knights,flash:0,dead:false});
  }
 }
-function takeRelic(id){if(!G.relicChoice||!G.relicChoice.includes(id))return;G.relics.push(id);G.relicChoice=null;recalc();G.ui=true;SFX.research();FX.flash('#ffe9a8',.25);saveRun()}
+function takeRelic(id){if(!G.relicChoice||!G.relicChoice.includes(id))return;G.relics.push(id);G.relicChoice=null;if(G.relicPicks>0){G.relicPicks--;rollRelics()}recalc();G.ui=true;SFX.research();FX.flash('#ffe9a8',.25);saveRun()}
 function startWave(){
  if(G.phase!=='build')return;if(G.relicChoice){UI.showRelics();return}
  G.wave++;G.phase='wave';G.waveInfo=G.next;G.queue=G.waveInfo.q.slice();G.waveT=0;G.spawned=0;G.allies=[];G.autoT=0;
@@ -1842,7 +1869,7 @@ function endWave(){
  if(n>META.best){META.best=n;saveMeta()}
  if(wi.boss){const pool=shuffle(RELICS.filter(r=>!G.relics.includes(r.id)).map(r=>r.id));if(pool.length){G.relicChoice=pool.slice(0,3);G.timers.push({t:1.6,fn:()=>UI.showRelics()})}}
  if(G.auto)G.autoT=4;
- G.ui=true;saveRun();
+ G.ui=true;saveRun();saveCheckpoint();
 }
 function spawnEnemy(k,o){
  o=o||{};const d=ENEMIES[k],n=Math.max(1,G.wave),wi=G.waveInfo,size=(d.size||1)*(o.elite?1.15:1);
@@ -1928,7 +1955,7 @@ function defeat(){
  if(G.phase==='defeat')return;G.phase='defeat';G.defeatT=0;G.slow=1.3;Store.del('htw_run');
  SFX.crumble();SFX.defeat();FX.shake(22);FX.flash('#ffffff',.6);
  for(let i=0;i<8;i++)G.timers.push({t:i*.22,fn:()=>{const x=rand(120,WALL_X),y=rand(WALL_TOP,GROUND);FX.debris(x,y,22,M.wallTier?'#6b7188':'#855d36',420);FX.smoke(x,y,6);FX.dust(x,GROUND,6,'#8a7f72',40);FX.shake(10)}});
- const crowns=Math.max(0,G.wave-1)+G.stats.bosses*3;G.crowns=crowns;META.crowns+=crowns;META.runs++;if(G.wave-1>META.best)META.best=G.wave-1;saveMeta();
+ const crowns=Math.max(0,G.wave-1-G.startWave)+Math.max(0,G.stats.bosses-G.bossBase)*3;G.crowns=crowns;META.crowns+=crowns;META.runs++;if(G.wave-1>META.best)META.best=G.wave-1;saveMeta();
  G.timers.push({t:2.6,fn:()=>UI.showDefeat()});
 }
 
@@ -2565,7 +2592,7 @@ const Tree={
 const UI={
  scale:1,panelSlot:-1,el:{},refT:0,nextKey:'',hintT:0,hintI:0,sheet:null,armNew:0,
  init(){
-  ['hud','wallBox','wallTxt','wallFill','waveTitle','waveSub','waveFill','waveBar','bossBar','bossName','bossFill','goldTxt','renTxt','btnTree','treeDot','btnSpeed','btnPause','btnAuto','btnSound','btnMenu','toasts','banner','bannerH','bannerP','pausedTag','hint','buildBar','nextLbl','nextChips','btnStart','btnRepair','btnFort','powers','panel','tip','relics','title','btnContinue','btnNew','btnLegacy','btnHow','titleFoot','crownPill','sheet','sheetBody','stage','cv','tree'].forEach(k=>this.el[k]=$(k));
+  ['hud','wallBox','wallTxt','wallFill','waveTitle','waveSub','waveFill','waveBar','bossBar','bossName','bossFill','goldTxt','renTxt','btnTree','treeDot','btnSpeed','btnPause','btnAuto','btnSound','btnMenu','toasts','banner','bannerH','bannerP','pausedTag','hint','buildBar','nextLbl','nextChips','btnStart','btnRepair','btnFort','powers','panel','tip','relics','title','btnContinue','btnNew','btnLegacy','btnWaves','btnHow','titleFoot','crownPill','sheet','sheetBody','stage','cv','tree'].forEach(k=>this.el[k]=$(k));
   const e=this.el;
   $('wallIc').src=ICONS.url('castle','#efe6d2');$('goldIc').innerHTML=ICONS.html('coin','#f2c14e',18);$('renIc').innerHTML=ICONS.html('renown','#9fd8ff',17);
   e.btnPause.innerHTML=ICONS.html('pause','#efe6d2',14);
@@ -2584,6 +2611,7 @@ const UI={
   e.btnNew.onclick=()=>{if(hasSave()&&!this.armNew){this.armNew=1;e.btnNew.innerHTML='<span>Abandon the saved run?</span><span class="pill">click again</span>';return}this.armNew=0;Store.del('htw_run');this.begin(false)};
   e.btnContinue.onclick=()=>this.begin(true);
   e.btnLegacy.onclick=()=>this.showLegacy();
+  e.btnWaves.onclick=()=>this.showWaves();
   e.btnHow.onclick=()=>this.showHelp();
   e.panel.addEventListener('pointerdown',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;ev.preventDefault();this.act(b.dataset.act,b.dataset.arg)});
   // tooltips
@@ -2600,14 +2628,16 @@ const UI={
   const e=this.el;if(!G||G.phase!=='title'){newRun();G.phase='title';G.sun=.86;G.night=.3}
   e.title.hidden=false;e.hud.hidden=true;e.sheet.hidden=true;e.cv.classList.add('plain');this.armNew=0;e.btnNew.textContent='New run';
   const s=Store.get('htw_run',null);if(s&&s.v===2){e.btnContinue.hidden=false;e.btnContinue.innerHTML='<span>Continue</span><span class="pill" style="color:#1a1206;background:rgba(255,255,255,.35)">wave '+(s.wave+1)+'</span>'}else e.btnContinue.hidden=true;
+  e.btnWaves.hidden=!(META.best>=1);$('wavePill').textContent='up to '+maxStartWave();
   e.crownPill.textContent=META.crowns+' crown'+(META.crowns===1?'':'s');
   e.titleFoot.textContent=META.best?'Best: held '+META.best+' wave'+(META.best===1?'':'s')+'  ·  '+META.runs+' run'+(META.runs===1?'':'s')+' ended':'No wall has fallen yet.';
  },
- begin(cont){
-  SFX.resume();if(!(cont&&loadRun()))newRun();
+ begin(cont,at){
+  SFX.resume();if(at)startAt(at.w,at.own);else if(!(cont&&loadRun()))newRun();
   const e=this.el;e.title.hidden=true;e.sheet.hidden=true;e.hud.hidden=false;e.cv.classList.remove('plain');this.panelSlot=-1;G.sel=-1;this.nextKey='';this.relKey=null;this.hintT=0;this.hintI=0;
   this.refresh(true);this.renderPanel();SFX.click();
   if(G.wave===0)this.banner('Night falls','Recruit defenders, then sound the horn.',null);
+  else if(at)this.banner('Wave '+(G.wave+1)+' is coming',at.own&&G.slots.some(u=>u)&&G.startWave===G.wave&&checkpoints()[G.wave]?'Your castle stands as you left it.':'A bare wall and a war chest. Spend it well.',null);
   if(META.news!==2){META.news=2;saveMeta();setTimeout(()=>{this.toast('New: a Dragon Aerie under Barracks in Research','#ef6f5a');this.toast('New: five lightning upgrades under Arcana','#c9a6ff');this.toast('New: four more positions under Masonry. Hold to keep striking.','#9fb0c8')},1800)}
   if(G.relicChoice)setTimeout(()=>this.showRelics(),600);
  },
@@ -2755,7 +2785,11 @@ const UI={
   else if(a==='legacy')this.showLegacy();
   else if(a==='help')this.showHelp();
   else if(a==='perk'){const p=LEGACY.find(x=>x.id===arg),l=leg(arg),c=legacyCost(l);if(l<p.max&&META.crowns>=c){META.crowns-=c;META.legacy[arg]=l+1;saveMeta();SFX.research();this.showLegacy()}else SFX.err()}
-  else if(a==='relic'){takeRelic(arg);this.closeSheet();this.toast('Relic claimed: '+RELIC[arg].name,'#f2c14e');this.refresh(true)}
+  else if(a==='relic'){takeRelic(arg);this.closeSheet();this.toast('Relic claimed: '+RELIC[arg].name,'#f2c14e');this.refresh(true);if(G.relicChoice)setTimeout(()=>{if(G.relicChoice&&!this.sheet)this.showRelics()},420)}
+  else if(a==='waves')this.showWaves();
+  else if(a==='wpick'){this.wsel=+arg;this.showWaves()}
+  else if(a==='wmode'){this.wown=arg==='own';this.showWaves()}
+  else if(a==='wgo'){this.closeSheet();this.begin(false,{w:this.wsel,own:this.wown})}
   else if(a==='music'){META.music=!META.music;SFX.setMusic(META.music);saveMeta();this.showMenu()}
   else if(a==='quality'){R.lowFx=!R.lowFx;this.fit();this.showMenu()}
   else if(a==='transfer')this.showTransfer();
@@ -2807,18 +2841,34 @@ const UI={
   const s=G.stats;let best=null;for(const u of G.slots)if(u&&(!best||u.kills>best.kills))best=u;
   const bn=best?(best.spec!=null?UNITS[best.type].specs[best.spec].name:UNITS[best.type].name)+' ('+best.kills+' kill'+(best.kills===1?'':'s')+')':'nobody';
   const m=Math.floor(s.time/60),sec=Math.floor(s.time%60);
-  this.el.hud.hidden=true;
+  this.el.hud.hidden=true;this.wsel=undefined;
   this.openSheet('<div class="lbl bad">The wall has fallen</div><h2>You held for '+(G.wave-1)+' wave'+(G.wave-1===1?'':'s')+'</h2><p class="dim">It broke on wave '+G.wave+' in '+BIOMES[G.biome].name+'.'+(G.wave-1>=META.best&&G.wave>1?' That is your best yet.':'')+'</p>'+
   '<div class="statgrid"><div class="stat"><b>'+fmt(s.kills)+'</b><span class="dim">enemies killed</span></div><div class="stat"><b>'+fmt(s.gold)+'</b><span class="dim">gold earned</span></div><div class="stat"><b>'+s.bosses+'</b><span class="dim">bosses slain</span></div><div class="stat"><b>'+m+':'+(sec<10?'0':'')+sec+'</b><span class="dim">time under attack</span></div></div>'+
   this.recap()+'<p>Most lethal defender: <b>'+bn+'</b></p>'+(G.relics.length?'<p>Relics: '+G.relics.map(id=>RELIC[id].name).join(', ')+'</p>':'')+
-  '<p style="font-size:18px;margin-top:12px">'+ICONS.html('crown','#f2c14e',22)+' <b class="goldc">+'+G.crowns+' crowns</b> <span class="dim">('+META.crowns+' to spend)</span></p>'+
-  '<div class="rowr"><button class="btn" type="button" data-go="title">Title</button><button class="btn" type="button" data-go="legacy">Spend crowns</button><button class="btn primary big" type="button" data-go="new">New run</button></div>','defeat');
+  '<p style="font-size:18px;margin-top:12px">'+ICONS.html('crown','#f2c14e',22)+' <b class="goldc">+'+G.crowns+' crowns</b> <span class="dim">('+META.crowns+' to spend'+(G.startWave>0?', counted from wave '+(G.startWave+1)+' where you started':'')+')</span></p>'+
+  '<div class="rowr"><button class="btn" type="button" data-go="title">Title</button><button class="btn" type="button" data-go="legacy">Spend crowns</button><button class="btn" type="button" data-go="new">New run from wave 1</button><button class="btn primary big" type="button" data-go="waves">Choose a wave</button></div>','defeat');
  },
  showRelics(){
   if(!G.relicChoice||G.phase!=='build')return;
   let h='<div class="lbl goldc">Spoils of the fallen</div><h2>Choose a relic</h2><p class="dim">One of three. You keep it for the rest of this run.</p><div class="perks" style="grid-template-columns:repeat(3,1fr)">';
   for(const id of G.relicChoice){const r=RELIC[id];h+='<div class="perk" style="padding:16px;border-color:var(--line2)"><div style="text-align:center;margin:4px 0 8px">'+ICONS.html(r.icon,'#f2c14e',54)+'</div><h4 style="font-size:16px;justify-content:center;text-align:center">'+r.name+'</h4><p style="font-size:14px;text-align:center;line-height:1.4;margin:4px 0 10px">'+r.desc+'</p><button class="btn primary" type="button" data-go="relic" data-arg="'+id+'">Take it</button></div>'}
   h+='</div>';this.openSheet(h,'relic');
+ },
+ /* pick any wave you have already reached */
+ showWaves(){
+  const max=maxStartWave(),cp=checkpoints();
+  if(this.wsel===undefined||this.wsel>max){this.wsel=max;this.wown=!!cp[max-1]}
+  const W=this.wsel,n=W-1,has=!!cp[n],own=this.wown&&has;
+  let h='<h2>Choose a wave</h2><p class="dim">Start at any wave you have already reached. Waves past your best stay locked until you get there the hard way.</p><div class="wgrid">';
+  for(let w=1;w<=max;w++)h+='<button type="button" data-go="wpick" data-arg="'+w+'" class="'+(w===W?'on ':'')+(w%5===0?'boss ':'')+(cp[w-1]?'cp':'')+'">'+w+'</button>';
+  h+='</div><p class="dim" style="font-size:12.5px;margin:0 0 10px"><span style="color:var(--good)">●</span> a castle of yours is saved at this wave &nbsp; · &nbsp; <span style="color:var(--danger)">red</span> is a boss wave</p>';
+  h+='<div class="seg" style="margin-bottom:10px"><button type="button" data-go="wmode" data-arg="own" class="'+(own?'on':'')+(has?'':' off')+'"'+(has?'':' disabled')+'>My castle from last time</button><button type="button" data-go="wmode" data-arg="fresh" class="'+(own?'':'on')+'">Fresh castle and a war chest</button></div>';
+  if(own){const s=cp[n],us=s.slots.filter(u=>u).length;h+='<p>Wave '+W+' with the castle you had when you last got here: <b>'+us+' defender'+(us===1?'':'s')+'</b>, <b>'+(Object.keys(s.owned).length-1)+' research</b>, '+coin(s.gold)+' gold and '+ren(s.renown)+' renown in hand.</p>'}
+  else if(n===0)h+='<p>Wave 1. An ordinary new run.</p>';
+  else{const pk=Math.floor(n/5);h+='<p>Wave '+W+' with a bare wall, '+coin(chestGold(n))+' gold and '+ren(chestRenown(n))+' renown to build with'+(pk?', and '+pk+' relic'+(pk===1?'':'s')+' to choose':'')+'. That is about what an ordinary run has earned by then.'+(has?'':' You have no saved castle at this wave yet.')+'</p>'}
+  h+='<p class="dim" style="font-size:12.5px">Crowns only count for waves you clear after the one you start on.'+(hasSave()?' Starting here replaces the run saved under Continue.':'')+'</p>';
+  h+='<div class="rowr"><button class="btn" type="button" data-go="'+(G.phase==='defeat'?'title':'close')+'">Back</button><button class="btn primary big" type="button" data-go="wgo">Start at wave '+W+'</button></div>';
+  this.openSheet(h,'waves');
  },
  showLegacy(){
   let h='<h2>Legacy</h2><p class="dim">Crowns are earned when a wall falls: one per wave held, three per boss slain. What you buy here lasts for every run to come.</p><p style="font-size:18px">'+ICONS.html('crown','#f2c14e',22)+' <b class="goldc">'+META.crowns+' crowns</b></p><div class="perks">';
