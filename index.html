@@ -12,7 +12,34 @@
 [hidden]{display:none!important}
 html,body{height:100%}
 body{margin:0;background:var(--void);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
-textarea{-webkit-user-select:text;user-select:text;touch-action:auto}
+textarea,input{-webkit-user-select:text;user-select:text;touch-action:auto}
+.prof{display:inline-flex;gap:8px;align-items:center;margin:-14px 0 14px 2px;padding:5px 12px;border-radius:16px;border:1px solid var(--line);background:rgba(12,10,20,.6);color:var(--dim);font:500 13px var(--body);cursor:pointer}
+.prof b{color:var(--text);font-weight:800}.prof:hover{border-color:var(--line2);color:var(--text)}
+.plist{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.prow{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--panel2)}
+.prow.on{border-color:var(--gold)}.prow b{font-size:16px;min-width:150px}.prow .dim{flex:1;font-size:13px}
+.pform{display:flex;gap:8px;margin:6px 0 4px}
+.pform input{flex:1;max-width:260px;background:#0b0912;color:#e8dfc8;border:1px solid #5a4a30;border-radius:8px;padding:9px 11px;font:500 15px var(--body)}
+.vhead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.vhead p{max-width:470px}.vcr{white-space:nowrap;font-size:20px;padding-top:8px}.vcr .dim{font-size:13px}
+.chests{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 6px}
+.chest{display:flex;flex-direction:column;gap:6px;padding:11px;border-radius:10px;border:1px solid var(--cc);background:linear-gradient(rgba(255,255,255,.05),rgba(0,0,0,.2))}
+.chest .ctop{display:flex;gap:10px;align-items:center}.chest h4{margin:0;font-family:var(--display);font-size:15px;color:var(--cc)}.chest p{margin:2px 0 0;font-size:12.5px;line-height:1.3}
+.cico{position:relative;flex:none}.cico b{position:absolute;right:-7px;top:-6px;min-width:20px;height:20px;border-radius:10px;background:var(--danger);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-sizing:border-box}
+.chest .cbtn{display:flex;gap:6px;margin-top:auto}.chest .cbtn .btn{flex:1}
+.vtabs{margin:16px 0 4px}
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.vitem{display:flex;flex-direction:column;gap:4px;padding:9px;border-radius:10px;border:1px solid var(--rc);background:var(--panel2);text-align:center;position:relative}
+.vitem h4{margin:4px 0 0;font-family:var(--display);font-size:14px}.vitem p{margin:0 0 4px;font-size:12px;line-height:1.3;flex:1;color:#cfc6b0}
+.rar{font:800 10.5px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--rc)}
+.vitem.eq{box-shadow:0 0 0 2px var(--rc),0 0 16px var(--rc)}
+.vitem.locked .sw{filter:grayscale(.6) brightness(.55)}.vitem.locked h4,.vitem.locked p{opacity:.6}
+.sw{position:relative;display:flex;align-items:center;justify-content:center;height:74px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.sw img{height:74px}.sw i{position:absolute;left:0;right:0;bottom:0;height:7px}
+.reveal{text-align:center;padding:10px 0;animation:rvl .5s cubic-bezier(.2,1.4,.4,1)}
+.reveal .rcard{width:220px;margin:14px auto 12px;padding:10px;border-radius:14px;border:2px solid var(--rc);background:var(--panel2);box-shadow:0 0 50px var(--rc),0 0 0 6px rgba(255,255,255,.04)}
+.reveal .rcard .sw{height:130px}.reveal .rcard .sw img{height:130px}.reveal .rcard .sw img.ic{height:70px;width:70px}
+.reveal .rar{font-size:13px}.reveal h2{margin-top:4px}.reveal p{max-width:520px;margin:6px auto}
+@keyframes rvl{0%{opacity:0;transform:scale(.6) rotate(-4deg)}100%{opacity:1;transform:none}}
 #sheetBody .seg button{font-size:14px;padding:8px 14px;border-radius:18px}.seg button.off{opacity:.35;cursor:default}
 .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;margin:12px 0;max-height:250px;overflow-y:auto;padding:2px}
 .wgrid button{font:800 15px var(--body);color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:8px;padding:9px 0;cursor:pointer;position:relative}
@@ -239,11 +266,13 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;color:var(--dim);bord
   <div class="titleInner">
    <div class="kicker">They come at dawn. Every dawn.</div>
    <h1>Hold<span>the</span>Wall</h1>
+   <button class="prof" id="btnProfile" type="button"></button>
    <div class="menu">
     <button class="btn big primary" id="btnContinue" type="button" hidden></button>
     <button class="btn big" id="btnNew" type="button">New run</button>
     <button class="btn big" id="btnWaves" type="button" hidden><span>Choose a wave</span><span class="pill" id="wavePill"></span></button>
     <button class="btn big" id="btnLegacy" type="button"><span>Legacy</span><span class="pill" id="crownPill"></span></button>
+    <button class="btn big" id="btnVault" type="button"><span>The Vault</span><span class="pill" id="vaultPill"></span></button>
     <button class="btn big ghost" id="btnHow" type="button">How to play</button>
    </div>
    <div class="foot" id="titleFoot"></div>
@@ -304,10 +333,28 @@ const Haptic=(()=>{
 
 /* persistent storage, always guarded */
 const Store={
- get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
- set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
- del(k){try{localStorage.removeItem(k)}catch(e){}}
+ ns:'',   // the current profile's prefix; the first profile has none, so saves from before profiles existed are simply its saves
+ key(k){return k==='htw_profiles'?k:this.ns+k},
+ get(k,d){try{const v=localStorage.getItem(this.key(k));return v?JSON.parse(v):d}catch(e){return d}},
+ set(k,v){try{localStorage.setItem(this.key(k),JSON.stringify(v))}catch(e){}},
+ del(k){try{localStorage.removeItem(this.key(k))}catch(e){}}
 };
+/* Profiles: several people can keep separate progress in the same browser. Everything a profile owns is stored under its prefix. */
+const Profiles={
+ data:null,
+ load(){const d=Store.get('htw_profiles',null);this.data=d&&d.list&&d.list.length?d:{list:[{id:'',name:'Player 1'}],cur:''};
+  if(!this.data.list.some(p=>p.id===this.data.cur))this.data.cur=this.data.list[0].id;Store.ns=this.data.cur;return this},
+ save(){Store.set('htw_profiles',this.data)},
+ cur(){return this.data.list.find(p=>p.id===this.data.cur)||this.data.list[0]},
+ clean(n){return String(n||'').replace(/[<>&"']/g,'').trim().slice(0,16)},
+ add(name){const id='p'+Date.now().toString(36)+'_';this.data.list.push({id,name:this.clean(name)||'Player '+(this.data.list.length+1)});this.use(id)},
+ use(id){this.data.cur=id;Store.ns=id;this.save()},
+ rename(name){name=this.clean(name);if(name){this.cur().name=name;this.save()}},
+ remove(id){if(this.data.list.length<2)return;for(const k of['htw_run','htw_meta','htw_cp']){try{localStorage.removeItem(id+k)}catch(e){}}
+  this.data.list=this.data.list.filter(p=>p.id!==id);if(this.data.cur===id)this.use(this.data.list[0].id);else this.save()}
+};
+Profiles.load();
+function hsl2hex(h,s,l){h=((h%360)+360)%360;const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12,v=l-a*Math.max(-1,Math.min(k-3,9-k,1));return Math.round(v*255).toString(16).padStart(2,'0')};return'#'+f(0)+f(8)+f(4)}
 /* ============ DATA ============ */
 const DMG_L=[1,1.5,2.1,3.0,4.0,5.4], RATE_L=[1,1.06,1.12,1.2,1.28,1.36], RANGE_L=[0,12,24,36,48,60];
 const COST_L=[1,.9,1.6,3,4.6,7];
@@ -597,6 +644,47 @@ const TIPS=[
  'A charge you have reached is kept for as long as you hold. Wind it up early and wait for them to bunch.',
  'A quick tap is a Spark: weak, fast, good for finishing things off. Number keys choose your other weapons.'
 ];
+
+/* ============ THE VAULT: things to collect ============
+   r is rarity 0..3. free items are owned from the start. Castle, lightning and dragon items only change how things look.
+   Elements change what your hand throws: each trades something away for what it gains. */
+const RARITY=[{name:'Common',col:'#b9bcc6'},{name:'Rare',col:'#6fb7ff'},{name:'Epic',col:'#c9a6ff'},{name:'Legendary',col:'#f2c14e'}];
+const ITEM_KINDS={castle:{name:'Castle',blurb:'What your walls are built from. Looks only.'},bolt:{name:'Lightning',blurb:'The colour of your Storm strikes. Looks only.'},dragon:{name:'Dragon',blurb:"Your dragon's hide. Looks only."},aspect:{name:'Element',blurb:'What your hand throws. Each one fights differently, none is simply better.'}};
+const ITEMS=[
+ {id:'c_granite',k:'castle',r:0,free:1,name:'Granite',desc:'Honest grey stone. It has never let you down.',ramp:['#2a2832','#6b7188','#b9bcc6','#eef0f6']},
+ {id:'c_sand',k:'castle',r:0,name:'Sandstone',desc:'Warm blocks hauled out of the desert.',ramp:['#3a2a1c','#8a6a44','#d9b98a','#f6e6c4']},
+ {id:'c_moss',k:'castle',r:0,name:'Mossback',desc:'Old stone the forest has started to take back.',ramp:['#141c14','#3d5a3a','#7f9a6a','#cfe0b4']},
+ {id:'c_marble',k:'castle',r:1,name:'Marble',desc:'White and cold and far too good for a siege.',ramp:['#55566a','#a4a6b8','#e6e7f0','#ffffff']},
+ {id:'c_blood',k:'castle',r:1,name:'Bloodstone',desc:'Red rock. It hides the stains.',ramp:['#1a0608','#5a1418','#a8342c','#f0a080']},
+ {id:'c_frost',k:'castle',r:1,name:'Frostbound',desc:'Cut from a glacier and never thawed.',ramp:['#0e2238','#3a6a94','#9fd0ee','#f2fbff']},
+ {id:'c_obsid',k:'castle',r:2,name:'Obsidian',desc:'Black glass with a violet edge where the light catches it.',ramp:['#05040a','#1a1426','#463a66','#b9a6ff']},
+ {id:'c_jade',k:'castle',r:2,name:'Jade',desc:'A whole fortress carved from green stone.',ramp:['#04201a','#0f5a46','#3fae86','#c8ffe6']},
+ {id:'c_gold',k:'castle',r:3,name:'Gilded',desc:'Every block plated. Tasteless. Magnificent.',ramp:['#3a2204','#9a6a12','#f2c14e','#fff6c8']},
+ {id:'c_opal',k:'castle',r:3,name:'Opal',desc:'Milk-white stone with every colour moving inside it.',opal:1,ramp:['#4a4a6a','#a4b4d8','#eaf0ff','#ffffff']},
+ {id:'b_storm',k:'bolt',r:0,free:1,name:'Stormlight',desc:'Blue-white, the way lightning has always been.',cols:['#bfe1ff','#fff3c4','#e9d5ff']},
+ {id:'b_emerald',k:'bolt',r:0,name:'Witchfire',desc:'Sickly green. Nobody likes being hit by it.',cols:['#9dffb8','#e4ffb0','#c4fff0']},
+ {id:'b_crimson',k:'bolt',r:0,name:'Bloodbolt',desc:'Red lightning out of a red sky.',cols:['#ff9a8a','#ffd0a0','#ffc4d8']},
+ {id:'b_violet',k:'bolt',r:1,name:'Amethyst',desc:'Deep purple with a white heart.',cols:['#c9a6ff','#f0c4ff','#ffffff']},
+ {id:'b_sun',k:'bolt',r:1,name:'Sunfire',desc:'Gold from the first spark to the last.',cols:['#ffd27a','#fff0a8','#ffffff']},
+ {id:'b_void',k:'bolt',r:2,name:'Voidlight',desc:'Purple into hot pink into white.',cols:['#b06bff','#ff6bd6','#ffffff']},
+ {id:'b_prism',k:'bolt',r:3,name:'Prismatic',desc:'Every colour, never the same one twice.',prism:1,cols:['#ffffff','#ffffff','#ffffff']},
+ {id:'d_azure',k:'dragon',r:0,free:1,name:'Azure',desc:'Blue and gold, as it hatched.',pal:null},
+ {id:'d_moss',k:'dragon',r:0,name:'Fenscale',desc:'Marsh green with a pale belly.',pal:{body:'#27492f',back:'#14281a',belly:'#d8d39a',mem:'#3f7a44',mem2:'#8cc46a',spine:'#e0d27a',horn:'#efe6d2',eye:'#ffe08a'}},
+ {id:'d_rust',k:'dragon',r:0,name:'Rusthide',desc:'Dull copper, like an old kettle.',pal:{body:'#6b3a22',back:'#3a1e12',belly:'#e8c08a',mem:'#a85a2c',mem2:'#e09a5a',spine:'#f2c47a',horn:'#efe6d2',eye:'#fff0a8'}},
+ {id:'d_obsid',k:'dragon',r:1,name:'Nightwing',desc:'Black, with violet where the light gets through its wings.',pal:{body:'#17141f',back:'#08060c',belly:'#5a4a7a',mem:'#3a2a5e',mem2:'#8f6fe0',spine:'#b9a6ff',horn:'#cfc6e6',eye:'#ff5ad6'}},
+ {id:'d_ivory',k:'dragon',r:1,name:'Ivory',desc:'Bone white. Red eyes.',pal:{body:'#cfc8b8',back:'#8f887a',belly:'#fffaf0',mem:'#e6ddc8',mem2:'#fff6e0',spine:'#ffffff',horn:'#8a7a5a',eye:'#ff3d2e'}},
+ {id:'d_ameth',k:'dragon',r:2,name:'Amethyst',desc:'Crystal purple from nose to tail.',pal:{body:'#4a2a7a',back:'#28144a',belly:'#f0c4ff',mem:'#7a4ac4',mem2:'#c9a6ff',spine:'#f6dcff',horn:'#efe6f6',eye:'#aaffee'}},
+ {id:'d_gold',k:'dragon',r:3,name:'Goldscale',desc:'It slept on a hoard long enough to become one.',pal:{body:'#a8761a',back:'#5a3a08',belly:'#fff2b0',mem:'#e0a52a',mem2:'#ffe07a',spine:'#fff6c8',horn:'#ffffff',eye:'#7df0ff'}},
+ {id:'a_storm',k:'aspect',r:0,free:1,name:'Storm',icon:'bolt',type:'shock',mul:1,tiers:['Spark','Bolt','Thunderbolt','Wrath of Heaven'],desc:'Lightning. Stuns what it hits and forks between enemies. The all-rounder.'},
+ {id:'a_ember',k:'aspect',r:2,name:'Ember',icon:'flame',type:'fire',mul:.85,cols:['#ffb04d','#ff7a2a','#fff0a8'],tiers:['Cinder','Firebolt','Fireball','Hellfire'],desc:'Fire. Hits a little softer, but everything it touches keeps burning, and a Fireball or better leaves the ground alight. Wasted on things that do not burn.'},
+ {id:'a_rime',k:'aspect',r:2,name:'Rime',icon:'snow',type:'frost',mul:.68,cols:['#bfeaff','#8fe3ff','#ffffff'],tiers:['Chip','Icicle','Glacier','Absolute Zero'],desc:'Frost. A third less damage, but everything it touches is slowed, and a Glacier or better freezes them where they stand.'},
+ {id:'a_void',k:'aspect',r:3,name:'Void',icon:'orb',type:'true',mul:.8,cols:['#b06bff','#7a3cff','#f0d0ff'],tiers:['Mote','Rift','Collapse','Singularity'],desc:'Ignores armour and every resistance, and drags everything nearby in toward the strike. It never stuns.'}
+];
+const ITEM={};ITEMS.forEach(i=>ITEM[i.id]=i);
+/* chests: price in crowns, and the odds of each rarity */
+const CHESTS=[{id:'w',name:'Wooden chest',col:'#c9a36b',price:6,odds:[70,24,5.5,.5]},{id:'i',name:'Iron chest',col:'#9fb0c8',price:16,odds:[35,45,17,3]},{id:'r',name:'Royal chest',col:'#f2c14e',price:40,odds:[0,45,42,13]}];
+/* buying one thing outright costs far more than gambling on a chest, but it is certain */
+const FORGE_PRICE=[12,30,70,160];
 /* ============ AUDIO: everything synthesised with the Web Audio API, no files ============
    Order of this file: mix table, master chain and buses, cached buffers, voice helpers, one entry per sound, loops, music.
    A sound opens a "group" with go() (rate limit, voice cap, pan, reverb send, volume) and then adds voices with the
@@ -607,7 +695,7 @@ const SFX=(()=>{
   CAP=36,   // voices wanted at once (a voice is one sounding oscillator or noise source)
   WHINNY=1;   // set to 0 to take the horse whinny out of gallop()
  /* Mix table: one number per sound, tuned so the peaks land where the mix wants them. Change loudness here. */
- const VOL={arrow:.21,xbow:.2,ballista:.18,treb:.24,earrow:.33,catapult:.24,volley:.55,flaskThrow:.5,fireCast:.31,fire:.3,frostCast:.39,chain:.58,flask:.27,beam:.65,freeze:.29,nova:.26,hit:.19,clank:.24,shieldBreak:.33,thud:.2,boom:.18,boomBig:.26,boulder:.2,rockHit:.18,meteorFall:.34,meteorHit:.28,claw:.42,oil:.31,spark:.29,strike1:.25,strike2:.3,strike3:.32,wrathBolt:.35,echo:.24,chainArc:.34,field:.29,ballSpawn:.39,ballZap:.26,pull:.3,fizzle:.48,tierUp1:.61,tierUp2:.56,tierUp3:.61,'death.flesh':.28,'death.bone':.21,'death.ghost':.27,'death.stone':.17,'death.wing':.19,'death.mech':.13,'wall.melee':.12,'wall.siege':.19,'wall.ranged':.24,crumble:.27,dark:.35,darkHit:.21,heal:.31,summon:.21,fuse:.36,screech:.21,enemyHorn:.14,bossDie:.22,'roar.ogre':.33,'roar.jugger':.44,'roar.lich':.16,'roar.dragon':.25,click:.24,open:.31,close:.23,tick:.25,pause:.39,buy:.62,recruit:.48,up:.29,spec:.3,sell:.54,coin:.32,chest:.38,err:.23,research:.66,relic:.15,repair:.25,fortify:.19,drums:.32,horn:.18,gallop:.3,victory:.22,defeat:.17,phoenix:.41,alarm:.19,biome:.27,newEnemy:.17,mutator:.74,chargeLoop:.044,breathLoop:.088,burnLoop:.083,bedLoop:.12,windLoop:.11,music:.031,beamLoop:.2,critter:.12,clash:.075,ember:.067};
+ const VOL={arrow:.21,xbow:.2,ballista:.18,treb:.24,earrow:.33,catapult:.24,volley:.55,flaskThrow:.5,fireCast:.31,fire:.3,frostCast:.39,chain:.58,flask:.27,beam:.65,freeze:.29,nova:.26,hit:.19,clank:.24,shieldBreak:.33,thud:.2,boom:.18,boomBig:.26,boulder:.2,rockHit:.18,meteorFall:.34,meteorHit:.28,claw:.42,oil:.31,spark:.29,strike1:.25,strike2:.3,strike3:.32,wrathBolt:.35,echo:.24,chainArc:.34,field:.29,ballSpawn:.39,ballZap:.26,pull:.3,fizzle:.48,tierUp1:.61,tierUp2:.56,tierUp3:.61,'death.flesh':.28,'death.bone':.21,'death.ghost':.27,'death.stone':.17,'death.wing':.19,'death.mech':.13,'wall.melee':.12,'wall.siege':.19,'wall.ranged':.24,crumble:.27,dark:.35,darkHit:.21,heal:.31,summon:.21,fuse:.36,screech:.21,enemyHorn:.14,bossDie:.22,'roar.ogre':.33,'roar.jugger':.44,'roar.lich':.16,'roar.dragon':.25,click:.24,open:.31,close:.23,tick:.25,pause:.39,buy:.62,recruit:.48,up:.29,spec:.3,sell:.54,coin:.32,chest:.38,err:.23,research:.66,relic:.15,repair:.25,fortify:.19,drums:.32,horn:.18,gallop:.3,victory:.22,defeat:.17,phoenix:.41,alarm:.19,biome:.27,newEnemy:.17,mutator:.74,chargeLoop:.044,breathLoop:.088,burnLoop:.083,bedLoop:.12,windLoop:.045,music:.031,beamLoop:.2,critter:.12,clash:.075,ember:.067};
  let ac=null,own=false,dead=0,on=true,musicOn=true,sr=48000,out,sfx,loopBus,musIn,musBus,pans,sends,NZ,TK,PW,CV;
  let live=[],last={},nodes=0,dropped=0,stolen=0,errs=0,lastErr='';
  let T=0,K=1,D=null,DS=null,P=0,hitN=0;   // the open group: start time, volume, dry bus, reverb send, priority
@@ -1445,13 +1533,14 @@ R.castleCfg=function(){
  return{tier:M.wallTier,wall4:!!M.slot.wall4,wall6:!!M.slot.wall6,turret:!!M.slot.turret,spire:!!M.slot.spire,roost:!!M.slot.roost,tower:!!M.slot.tower,roof:!!M.slot.roof,keep:!!M.slot.keep,butt:!!o.buttress,iron:!!o.irongate,spikes:!!o.spikes,slits:!!o.arrowslits,watch:!!o.watch,murder:!!o.murder,adam:!!o.adamant};
 };
 R.ensureCastle=function(){
- const cfg=this.castleCfg(),key=JSON.stringify(cfg)+this.rs;
+ const skin=ITEM[vaultEq('castle')],cfg=this.castleCfg(),key=JSON.stringify(cfg)+this.rs+(skin?skin.id:'');
  if(key===this.castleKey)return;
  this.castleKey=key;
  const s=Math.max(1,this.rs),cv=this.castleCv||(this.castleCv=document.createElement('canvas'));
  cv.width=Math.round((340+WX)*s);cv.height=Math.round(560*s);
  const c=cv.getContext('2d');c.setTransform(s,0,0,s,0,0);c.clearRect(0,0,340+WX,560);c.translate(10,-80);
  this.paintCastle(c,cfg);
+ if(skin&&!skin.free)skinCastle(cv,skin);
 };
 R.paintCastle=function(c,cfg){
  const stone=cfg.tier>=1,r=mulberry(4242);
@@ -2070,9 +2159,9 @@ const Portraits={
   return this.cache['e'+k]=cv.toDataURL();
  },
  unit(type,spec){
-  const key='u'+type+spec;if(this.cache[key])return this.cache[key];
+  const key='u'+type+spec+(type==='dragon'?vaultEq('dragon'):'');if(this.cache[key])return this.cache[key];
   const cv=document.createElement('canvas');cv.width=cv.height=96;const c=cv.getContext('2d');
-  if(type==='dragon'){drawDragon(c,{x:50,y:60,sc:.6,face:1,t:.35,breath:0,pal:DPAL.own[spec==null?0:spec+1],perch:0});return this.cache[key]=cv.toDataURL()}
+  if(type==='dragon'){drawDragon(c,{x:50,y:60,sc:.6,face:1,t:.35,breath:0,pal:dragonPal(spec),perch:0});return this.cache[key]=cv.toDataURL()}
   const big=type==='banner';c.translate(type==='ballista'?56:44,big?92:86);c.scale(big?1.1:1.5,big?1.1:1.5);
   const savedT=R.t;R.t=1.3;const L=R.L;R.L=[];
   const u={type,spec:spec==null?null:spec,lvl:0,anim:0,aim:type==='archer'?-.05:.1,cd:.2,st:{rate:1},target:1,kills:0};
@@ -2224,7 +2313,7 @@ function drawDragon(c,o){
 /* your dragon is drawn after everything on the field, because it flies over all of it */
 function drawDragonUnit(c,u,i){
  const sl=SLOTS[i],x=u.dx===undefined?sl.x:u.dx,y=u.dy===undefined?sl.y-21:u.dy,perch=u.ds===undefined||u.ds==='perch';
- const sc=.57+.025*Math.min(u.lvl,6),frost=u.spec===1,face=perch?1:(u.dface||1),pal=DPAL.own[u.spec==null?0:u.spec+1],dt=R.dt||0;
+ const sc=.57+.025*Math.min(u.lvl,6),frost=u.spec===1,face=perch?1:(u.dface||1),pal=dragonPal(u.spec),dt=R.dt||0;
  if(!perch){c.fillStyle=rgba('#000000',clamp(.2-(GROUND-y)*.0004,.05,.2));c.beginPath();c.ellipse(x,GROUND+15,24*sc+12,3.6,0,0,TAU);c.fill()}
  /* eased so the wings unfold on take-off and the jaws open rather than snap; the wing phase is summed so a change of pace does not jump */
  u.dper=u.dper===undefined?(perch?1:0):clamp(u.dper+(perch?dt:-dt)*5,0,1);u.dbr=clamp((u.dbr||0)+(u.breathing?dt:-dt)*11,0,1);u.dph=(u.dph||0)+dt*(u.ds==='run'?7.5:5.2);
@@ -2234,9 +2323,12 @@ function drawDragonUnit(c,u,i){
  if(u.breathing)R.light(m.mx,m.my,110,frost?'#8fe3ff':'#ff8a2a',1);else R.light(m.ex,m.ey,26,pal.eye,.45);
 }
 /* ============ SIMULATION ============ */
-let META=Object.assign({crowns:0,legacy:{},best:0,runs:0,sound:true,music:true,seen:{},tut:0},Store.get('htw_meta',{}));
-if(!META.legacy)META.legacy={};if(!META.seen)META.seen={};
+let META=null;
+/* everything a profile keeps between runs; called again whenever the profile changes */
+function loadMeta(){META=Object.assign({crowns:0,legacy:{},best:0,runs:0,sound:true,music:true,seen:{},tut:0},Store.get('htw_meta',{}));
+ if(!META.legacy)META.legacy={};if(!META.seen)META.seen={};vaultInit()}
 function saveMeta(){Store.set('htw_meta',META)}
+loadMeta();
 const leg=id=>META.legacy[id]||0;
 let G=null,M=null;
 
@@ -2423,7 +2515,7 @@ function endWave(){
  G.next=genWave(n+1);
  const nb=Math.floor(n/10)%BIOMES.length;
  if(nb!==G.biome){FX.fade(()=>{G.biome=nb;R.wx.length=0});G.timers.push({t:1.4,fn:()=>{SFX.biome();UI.banner(BIOMES[nb].name,'The land changes. So does what crawls out of it.','#9fd8ff')}})}
- if(n>META.best){META.best=n;saveMeta()}
+ if(n>META.best){META.best=n;saveMeta();vaultGrant()}
  if(wi.boss){const pool=shuffle(RELICS.filter(r=>!G.relics.includes(r.id)).map(r=>r.id));if(pool.length){G.relicChoice=pool.slice(0,3);G.timers.push({t:1.6,fn:()=>UI.showRelics()})}}
  if(G.auto)G.autoT=4;
  G.ui=true;saveRun();saveCheckpoint();
@@ -2513,7 +2605,7 @@ function defeat(){
  if(G.phase==='defeat')return;G.phase='defeat';G.defeatT=0;G.slow=1.3;Store.del('htw_run');
  SFX.crumble();SFX.defeat();FX.shake(22);FX.flash('#ffffff',.6);
  for(let i=0;i<8;i++)G.timers.push({t:i*.22,fn:()=>{const x=rand(120,WALL_X),y=rand(WALL_TOP,GROUND);FX.debris(x,y,22,M.wallTier?'#6b7188':'#855d36',420);FX.smoke(x,y,6);FX.dust(x,GROUND,6,'#8a7f72',40);FX.shake(10)}});
- const crowns=Math.max(0,G.wave-1-G.startWave)+Math.max(0,G.stats.bosses-G.bossBase)*3;G.crowns=crowns;META.crowns+=crowns;META.runs++;if(G.wave-1>META.best)META.best=G.wave-1;saveMeta();
+ const crowns=Math.max(0,G.wave-1-G.startWave)+Math.max(0,G.stats.bosses-G.bossBase)*3;G.crowns=crowns;META.crowns+=crowns;META.runs++;if(G.wave-1>META.best)META.best=G.wave-1;saveMeta();vaultGrant();
  G.timers.push({t:2.6,fn:()=>UI.showDefeat()});
 }
 
@@ -2616,7 +2708,9 @@ function impact(p){
    A tap is a Spark. Hold the button down and draw circles and a charge winds up, level by level: Bolt, Thunderbolt and,
    with research, Wrath of Heaven. Let go and it comes down where the pointer is. A level you have reached is kept for as
    long as you hold on; progress toward the next one leaks away if you stop circling. */
-const TIERS=[{name:'Spark',dmg:.5,r:38,col:'#bfe1ff'},{name:'Bolt',dmg:1,r:58,col:'#bfe1ff'},{name:'Thunderbolt',dmg:2.4,r:90,col:'#fff3c4'},{name:'Wrath of Heaven',dmg:4.2,r:104,col:'#e9d5ff'}];
+const TIERS=[{dmg:.5,r:38},{dmg:1,r:58},{dmg:2.4,r:90},{dmg:4.2,r:104}];
+/* colour and name depend on the element and lightning colour the player has equipped */
+TIERS.forEach((T,i)=>{Object.defineProperty(T,'col',{get:()=>tcol(i)});Object.defineProperty(T,'name',{get:()=>tierName(i)})});
 /* turns of the hand needed to fill each level, and the fastest circling that still counts (turns a second) */
 const TIER_REV=[.9,1.5,2,2],SPIN_MAX=2.6,TURN_SLACK=1.6;
 const maxTier=()=>M.smiteWrath?3:2;
@@ -2635,7 +2729,7 @@ function chargeMove(x,y){
    if(c.wind>c.hi){c.pend+=(c.wind-c.hi)/TAU;c.hi=c.wind;c.lo=c.hi-TURN_SLACK}
    else if(c.wind<c.lo){c.pend+=(c.lo-c.wind)/TAU;c.lo=c.wind;c.hi=c.lo+TURN_SLACK}}}
  c.hx=dx/d;c.hy=dy/d;c.has=true;c.lx=x;c.ly=y;
- c.trail.push({x,y,t:0});if(c.trail.length>48)c.trail.shift();
+ c.trail.push({x,y,t:0,ts:performance.now()});if(c.trail.length>48)c.trail.shift();
 }
 /* dt is real time, spd is the game speed (0 while the game is halted). A faster game winds faster, so lightning keeps pace with it. */
 function chargeTick(dt,spd){
@@ -2657,14 +2751,14 @@ function chargeTick(dt,spd){
  if(t1>=2&&chance(dt*(t1-1)*3.2)){const cx=x+rand(-260,260);FX.bolt(cx,-10,cx+rand(-90,90),rand(30,150),col,1.3,.1)}
  // corona: a charge being wound lashes out at whatever is near it
  if(M.smiteCorona&&t1>=1&&G.phase==='wave'){c.zap-=sd;if(c.zap<=0){c.zap=.3;let n=0;const dm=smiteDamage()*.09*t1;
-   for(const e of G.enemies){if(!targetable(e))continue;const ex=e.x,ey=ecy(e);if(Math.hypot(ex-x,ey-y)<120+e.bw){FX.bolt(x,y,ex,ey,col,1.5,.12);FX.spark(ex,ey,3,'#e6f3ff',120);hurt(e,dm,'shock',null,{dir:1,tag:'smite',sub:'smCorona'});if(++n>=t1+1)break}}
+   for(const e of G.enemies){if(!targetable(e))continue;const ex=e.x,ey=ecy(e);if(Math.hypot(ex-x,ey-y)<120+e.bw){FX.bolt(x,y,ex,ey,col,1.5,.12);FX.spark(ex,ey,3,'#e6f3ff',120);zapOne(e,dm,0,'smCorona',1);if(++n>=t1+1)break}}
    if(n)SFX.ballZap(x)}}
 }
 function chargeRelease(x,y){
  const c=G.ch;if(!c||!c.on)return;c.on=false;
  if(G.phase!=='build'&&G.phase!=='wave')return;
  const mx=maxTier(),tier=Math.min(mx,Math.floor(c.c+1e-6)),over=clamp(c.c-mx,0,1);
- if(tier>=1){strike(x,y,tier,over);if(!META.wound){META.wound=1;saveMeta()}}
+ if(tier>=1){releaseMove(c,x,y,tier,over);if(!META.wound){META.wound=1;saveMeta()}}
  else if(c.t>.3&&c.c>.2){SFX.fizzle();FX.spark(x,y,5,'#bfe1ff',90)}
 }
 function chargeCancel(){const c=G.ch;if(c&&c.on){c.on=false;if(c.c>.2)SFX.fizzle()}}
@@ -2679,9 +2773,9 @@ function skyBolt(x,y,dm,rad,tier,sub,over){
  if(tier)FX.flash(col,[0,.09,.2,.34][tier]);
  FX.light(x,y,[110,230,380,580][tier],col,[.16,.25,.4,.6][tier],1.3);FX.spark(x,y,[5,12,26,46][tier],'#e6f3ff',[170,260,380,480][tier]);FX.ring(x,y,rad+4,col,big?.35:.25,[2,3,5,7][tier]);
  if(tier&&y>GROUND-30)FX.decal({kind:'scorch',x,y:GROUND+13,size:[0,20,40,64][tier],life:6+tier*2});
- const stun=M.smiteStun*(.5+.35*tier),kb=[0,0,170,250][tier];
- for(const e of G.enemies){if(e.dead)continue;if(Math.hypot(e.x-x,ecy(e)-y)<rad+e.bw){hit.add(e);hurt(e,dm,'shock',null,{force:1,dir:Math.sign(e.x-x)||1,force2:[1.2,1.6,2.2,2.8][tier],tag:'smite',sub});
-   if(e.dead)continue;if(stun)applyStun(e,stun);if(kb&&!e.boss&&!e.d.mech)e.kb=(Math.sign(e.x-x)||1)*kb}}
+ const kb=[0,0,170,250][tier];
+ for(const e of G.enemies){if(e.dead)continue;if(Math.hypot(e.x-x,ecy(e)-y)<rad+e.bw){hit.add(e);zapOne(e,dm,tier,sub,Math.sign(e.x-x)||1);
+   if(!e.dead&&kb&&!e.boss&&!e.d.mech)e.kb=(Math.sign(e.x-x)||1)*kb}}
  return hit;
 }
 /* Lightning looks for something to hit: released in empty air, it carries on down to the ground beneath. */
@@ -2691,7 +2785,7 @@ function strike(x,y,tier,over,echo){
  x=clamp(x,WALL_X+20,W);over=over||0;
  const T=TIERS[tier],base=smiteDamage(),dm=base*T.dmg*(echo?.6:1)*(1+.6*over),rad=T.r*(1+.25*over);
  y=echo?Math.min(y,GROUND+20):strikeY(x,y,rad);
- if(echo)SFX.echo(x);else if(tier)SFX.strike(tier,x,over);else SFX.spark(x);
+ strikeSfx(tier,x,over,echo);
  if(!echo&&tier){if(tier>=2)G.slow=Math.max(G.slow,tier===3?.24:.12);buzz(tier===3?[30,30,90]:tier===2?40:16)}
  const hit=skyBolt(x,y,dm,rad,tier,null,over);
  if(echo)return;
@@ -2700,22 +2794,103 @@ function strike(x,y,tier,over,echo){
  if(M.smiteChain){const n=M.smiteChain-1+tier*2;
   const hop=(px,py,i)=>{let nx=null,nd=190;for(const e of G.enemies){if(!targetable(e)||hit.has(e))continue;const dd=Math.hypot(e.x-px,ecy(e)-py);if(dd<nd){nd=dd;nx=e}}if(!nx)return;
    hit.add(nx);const cx=nx.x,cy=ecy(nx);FX.bolt(px,py,cx,cy,T.col,tier>=2?3.2:2.2);FX.spark(cx,cy,5,'#e6f3ff',160);SFX.chainArc(i,cx);
-   hurt(nx,dm*.45,'shock',null,{dir:1,tag:'smite',sub:'smChain'});if(!nx.dead&&M.smiteStun)applyStun(nx,M.smiteStun*.5);
+   zapOne(nx,dm*.45,0,'smChain',1);
    if(i+1<n)G.timers.push({t:.05,fn:()=>hop(cx,cy,i+1)})};
   hop(x,y,0)}
  if(tier<1)return;
+ aftermath(x,y,tier,rad,base);
+ // Wrath of Heaven: six more bolts walk out along the ground either side
+ if(tier===3){FX.text(x,Math.min(y,GROUND)-84,TIERS[3].name.split(' ')[0].toUpperCase(),TIERS[3].col,26,1);
+  for(const i of[-3,-2,-1,1,2,3]){const bx=clamp(x+i*70,WALL_X+20,W-6);G.timers.push({t:.07+Math.abs(i)*.085,fn:()=>{SFX.wrathBolt(bx);skyBolt(bx,y,base*(1+.6*over),46,1,'smWrath')}})}}
+}
+/* what a charged strike leaves behind on the ground: the element's own mark, then whatever the research adds */
+function aftermath(x,y,tier,rad,base){
+ const A=curAspect();
+ if(A.id==='a_ember'&&tier>=2&&y>GROUND-70){addZone({kind:'fire',x,r:rad*.8,t:4,dps:base*.5*tier,src:null});FX.decal({kind:'scorch',x,y:GROUND+13,size:rad*.7,life:9})}
+ if(A.id==='a_rime'&&y>GROUND-70)FX.decal({kind:'ice',x,y:GROUND+13,size:rad*.9,life:2+tier});
+ if(A.id==='a_void')pullTo(x,130+45*tier);
  // the struck ground stays live
  if(M.smiteField){addZone({kind:'shock',x,r:rad*.85,t:2+tier,dps:base*.14*(1+.25*tier),slow:.25,src:null});SFX.field(x)}
  // lodestone: everything on foot nearby is dragged toward the strike
- if(M.smitePull){const cx=Math.max(x,WALL_X+46),reach=110+40*tier;let any=false;
-  for(const e of G.enemies){if(e.dead||e.fly||e.boss||e.d.mech||e.phased||e.alt>40)continue;const dx=cx-e.x,ad=Math.abs(dx);if(ad>14&&ad<reach){e.kb=Math.sign(dx)*Math.min(ad,150)*3.4;any=true}}
-  if(any){SFX.pull(cx);FX.p({x:cx,y:GROUND-6,vx:0,vy:0,life:.32,size:reach,size2:8,col:'#c9a6ff',shape:3,w:2.5,add:1});for(let i=0;i<10;i++){const sx=cx+rand(-reach,reach);FX.p({x:sx,y:GROUND-rand(4,40),vx:(cx-sx)*3,vy:0,drag:2,life:.3,size:1.6,col:'#e0ccff',shape:1,add:1})}}}
+ if(M.smitePull&&A.id!=='a_void')pullTo(x,110+40*tier);
  // a Thunderbolt leaves ball lightning behind; Wrath leaves two, one of them rolling back to bounce off the wall
  if(M.smiteBall&&tier>=2){const ball=(vx,ph)=>G.proj.push({k:'ball',x,y:GROUND-40,px:x,py:GROUND-40,vx,life:4.2,t:ph,tick:.15,dmg:base*.13,fixed:1});
   ball(135,0);if(tier===3)ball(-110,1.6);SFX.ballSpawn(x);FX.ring(x,GROUND-40,30,'#bfe1ff',.3,3)}
- // Wrath of Heaven: six more bolts walk out along the ground either side
- if(tier===3){FX.text(x,Math.min(y,GROUND)-84,'WRATH','#e9d5ff',26,1);
-  for(const i of[-3,-2,-1,1,2,3]){const bx=clamp(x+i*70,WALL_X+20,W-6);G.timers.push({t:.07+Math.abs(i)*.085,fn:()=>{SFX.wrathBolt(bx);skyBolt(bx,y,base*(1+.6*over),46,1,'smWrath')}})}}
+}
+function pullTo(x,reach){const cx=Math.max(x,WALL_X+46);let any=false;
+ for(const e of G.enemies){if(e.dead||e.fly||e.boss||e.d.mech||e.phased||e.alt>40)continue;const dx=cx-e.x,ad=Math.abs(dx);if(ad>14&&ad<reach){e.kb=Math.sign(dx)*Math.min(ad,150)*3.4;any=true}}
+ if(any){SFX.pull(cx);FX.p({x:cx,y:GROUND-6,vx:0,vy:0,life:.32,size:reach,size2:8,col:'#c9a6ff',shape:3,w:2.5,add:1});for(let i=0;i<10;i++){const sx=cx+rand(-reach,reach);FX.p({x:sx,y:GROUND-rand(4,40),vx:(cx-sx)*3,vy:0,drag:2,life:.3,size:1.6,col:'#e0ccff',shape:1,add:1})}}}
+/* one enemy touched by the hand weapon: the damage, and whatever the equipped element does on top */
+function zapOne(e,dm,tier,sub,dir){
+ const A=curAspect();
+ hurt(e,dm*A.mul,A.type,null,{force:1,dir,force2:[1.2,1.6,2.2,2.8][tier],tag:'smite',sub});if(e.dead)return;
+ if(A.id==='a_ember')applyBurn(e,dm*.22,4,null);
+ else if(A.id==='a_rime'){applySlow(e,.4,3);if(tier>=2)applyStun(e,1+.35*(tier-2),1)}
+ if(A.id!=='a_void'){const st=M.smiteStun*(.5+.35*tier);if(st)applyStun(e,st)}
+}
+function strikeSfx(tier,x,over,echo){
+ const a=curAspect().id;if(echo)return SFX.echo(x);
+ if(a==='a_ember'){if(!tier)return SFX.fire(x);SFX.fireCast(x);SFX.boom(tier>=2,x);if(tier===3)SFX.meteorHit(x)}
+ else if(a==='a_rime'){if(!tier)return SFX.frostCast(x);SFX.freeze(x);SFX.frostCast(x);if(tier>=2)SFX.nova(x)}
+ else if(a==='a_void'){SFX.dark(x);if(tier){SFX.darkHit();SFX.pull(x)}if(tier>=2)SFX.boom(tier===3,x)}
+ else tier?SFX.strike(tier,x,over):SFX.spark(x);
+}
+/* ---------- how the charge is let go ----------
+   Let go with the hand still and it strikes that spot. A fast, straight flick in the last instant makes it a different move:
+   down slams it into the ground, sideways throws it, up scatters it. */
+function flickOf(c,x,y){
+ const now=performance.now(),tr=c.trail;let k=tr.length-1;
+ if(k>=0&&Math.hypot(x-tr[k].x,y-tr[k].y)<3)k--;if(k<0)return null;
+ // walk back from the release for as long as the hand kept to one direction: that straight tail is the flick
+ const h=Math.atan2(y-tr[k].y,x-tr[k].x);let i=k;
+ while(i>0&&now-tr[i-1].ts<170){let dh=Math.abs(Math.atan2(tr[i].y-tr[i-1].y,tr[i].x-tr[i-1].x)-h);if(dh>Math.PI)dh=TAU-dh;if(dh>.3)break;i--}
+ const s=tr[i],dx=x-s.x,dy=y-s.y,d=Math.hypot(dx,dy),dt=(now-s.ts)/1000;
+ if(d<90||dt<.012||d/dt<1400)return null;   // circles never hold a line this long at this speed; a deliberate flick does
+ return{ox:s.x,oy:s.y,ux:dx/d,uy:dy/d};
+}
+function releaseMove(c,x,y,tier,over){
+ const f=flickOf(c,x,y);if(!f)return strike(x,y,tier,over);
+ if(!META.flicked){META.flicked=1;saveMeta()}
+ if(f.uy>.72)return slam(x,tier,over);
+ if(f.uy<-.72)return scatter(f.ox,f.oy,tier,over);
+ return hurl(f.ox,f.oy,f.ux,f.uy,tier,over);
+}
+/* Slam: straight down into the ground, and the ground carries it outward. Wider than a strike, softer at the edges, nothing for flyers. */
+function slam(x,tier,over){
+ x=clamp(x,WALL_X+20,W);over=over||0;
+ const T=TIERS[tier],base=smiteDamage(),dm=base*T.dmg*.8*(1+.6*over),rad=T.r*(1+.25*over),gy=GROUND-24,wide=rad*(tier===3?3:2.4),col=T.col;
+ strikeSfx(tier,x,over);SFX.boulder(x);if(tier>=2)G.slow=Math.max(G.slow,.12);buzz(tier>=2?[40,20,40]:24);
+ const hit=skyBolt(x,gy,dm,rad,tier,'smSlam',over);
+ for(const e of G.enemies){if(e.dead||hit.has(e)||e.fly||e.alt>40||e.phased)continue;const dx=e.x-x;
+  if(Math.abs(dx)<wide+e.bw){zapOne(e,dm*.55,Math.max(0,tier-1),'smSlam',Math.sign(dx)||1);if(!e.dead){applyStun(e,.35);if(!e.boss&&!e.d.mech)e.kb=(Math.sign(dx)||1)*(110+40*tier)}}}
+ FX.shake(8+tier*3);FX.debris(x,GROUND,10+tier*6,'#3a342e',360);
+ for(const s of[-1,1])for(let i=1;i<=6;i++){const px=x+s*wide*i/6;if(px<WALL_X+6||px>W)continue;G.timers.push({t:i*.025,fn:()=>{FX.dust(px,GROUND+6,2,'#8a7f72',10);FX.p({x:px,y:GROUND+4,vx:s*120,vy:-rand(60,160),g:500,life:.3,size:1.8,col,shape:1,add:1})}})}
+ FX.text(x,GROUND-120-tier*10,'SLAM',col,18+tier*2,1);
+ aftermath(x,gy,tier,rad,base);
+}
+/* Throw: a lance of it along the line of the flick, through everything in the way. */
+function hurl(x,y,ux,uy,tier,over){
+ x=clamp(x,WALL_X+20,W);y=Math.min(y,GROUND-6);over=over||0;
+ const T=TIERS[tier],base=smiteDamage(),dm=base*T.dmg*.8*(1+.6*over),col=T.col;
+ let L=(280+150*tier)*(1+.25*over);
+ if(uy>0){const tg=(GROUND+6-y)/uy;if(tg<L)L=tg}
+ if(ux<0){const tw=(x-(WALL_X+12))/-ux;if(tw<L)L=Math.max(20,tw)}
+ const ex=x+ux*L,ey=y+uy*L,w=[0,4,6.5,9][tier],reach=22+tier*6,dir=Math.sign(ux)||1;
+ strikeSfx(Math.max(1,tier-1),x,over);SFX.chain(x);buzz(20+tier*8);
+ FX.bolt(x,y,ex,ey,col,w,.26);FX.bolt(x,y,ex,ey,'#ffffff',w*.45,.3);FX.light((x+ex)/2,(y+ey)/2,Math.max(120,L*.7),col,.3,1.1);FX.flash(col,.04*tier);
+ for(const e of G.enemies){if(e.dead)continue;const px=e.x-x,py=ecy(e)-y,t=clamp(px*ux+py*uy,0,L),d=Math.hypot(px-ux*t,py-uy*t);
+  if(d<reach+e.bw*.7+e.bh*.25){zapOne(e,dm,tier,'smThrow',dir);FX.spark(e.x,ecy(e),5,'#ffffff',200);if(!e.dead&&!e.boss&&!e.d.mech)e.kb=dir*(90+50*tier)}}
+ FX.spark(ex,ey,10+tier*6,col,300);FX.ring(ex,ey,30+tier*14,col,.3,3);
+ if(ey>GROUND-20){FX.debris(ex,GROUND,8,'#3a342e',260);FX.decal({kind:'scorch',x:ex,y:GROUND+13,size:16+tier*8,life:6})}
+ FX.text(x+ux*40,y-34,'THROWN',col,16+tier*2,1);
+}
+/* Scatter: thrown up, it comes back down as a spread of small bolts that pick their own targets, flyers first. */
+function scatter(x,y,tier,over){
+ over=over||0;const T=TIERS[tier],base=smiteDamage(),n=3+tier*2,dm=base*T.dmg*.42*(1+.6*over),col=T.col;
+ const es=G.enemies.filter(e=>targetable(e)).sort((a,b)=>((b.fly?1:0)-(a.fly?1:0))||(Math.hypot(a.x-x,ecy(a)-y)-Math.hypot(b.x-x,ecy(b)-y)));
+ strikeSfx(1,x,over);buzz([12,30,12,30,12]);FX.ring(x,y,60,col,.3,3);FX.bolt(x,y,x+rand(-40,40),-10,col,3,.2);FX.text(x,y-44,'SCATTER',col,16+tier*2,1);
+ for(let i=0;i<n;i++){const e=es.length?es[i%es.length]:null,fx=clamp(x+rand(-220,220),WALL_X+20,W-6);
+  G.timers.push({t:.08+i*.07,fn:()=>{const ok=e&&!e.dead,bx=ok?e.x:fx,by=ok?ecy(e):GROUND-24;SFX.wrathBolt(bx);skyBolt(bx,by,dm,34,1,'smScatter')}})}
 }
 const powMul=()=>Math.pow(hpMul(Math.max(1,G.wave)),.6)*(1+M.powDmg);
 const powerCd=id=>POWERS[id].cd*(1-Math.min(.6,M.cdPct))*(id==='smite'?1-M.smiteCd:1);
@@ -3031,6 +3206,74 @@ function collectChest(x,y){
  for(let i=0;i<G.chests.length;i++){const ch=G.chests[i];if(Math.abs(ch.x-x)<28&&y>GROUND-30&&y<GROUND+40){G.chests.splice(i,1);addGold(ch.gold,ch.x,GROUND-24);SFX.chest();FX.spark(ch.x,GROUND,16,'#f2c14e',240);FX.ring(ch.x,GROUND,40,'#f2c14e',.4,3);return true}}
  return false;
 }
+/* ============ THE VAULT: chests, what is owned, what is worn ============ */
+function vaultInit(){
+ const v=META.vault||(META.vault={});v.own=v.own||{};v.eq=v.eq||{};if(!Array.isArray(v.chests))v.chests=[0,0,0];if(v.ms===undefined)v.ms=0;
+ for(const it of ITEMS)if(it.free)v.own[it.id]=1;
+ for(const k in ITEM_KINDS){const id=v.eq[k];if(!id||!ITEM[id]||!v.own[id]||ITEM[id].k!==k)v.eq[k]=ITEMS.find(i=>i.k===k&&i.free).id}
+ vaultGrant(true);
+}
+/* a free chest every fifth wave of your best run: wooden early, iron in the middle, royal from wave 35 */
+function vaultGrant(quiet){
+ const v=META.vault,ms=Math.floor((META.best||0)/5);let got=0;
+ while(v.ms<ms){v.ms++;const w=v.ms*5;v.chests[w<=10?0:w<=30?1:2]++;got++}
+ if(got){saveMeta();if(!quiet&&typeof UI!=='undefined'&&UI.el&&UI.el.toasts)UI.toast('New best. A chest is waiting in your vault.','#f2c14e')}
+ return got;
+}
+const vaultEq=k=>META&&META.vault?META.vault.eq[k]:null;
+const curAspect=()=>ITEM[vaultEq('aspect')]||ITEM.a_storm;
+const tierName=t=>curAspect().tiers[t];
+function tcol(tier){
+ const a=curAspect(),i=[0,0,1,2][tier];if(a.cols)return a.cols[i];
+ const b=ITEM[vaultEq('bolt')]||ITEM.b_storm;return b.prism?hsl2hex(performance.now()*.14+tier*55,1,.76):b.cols[i];
+}
+const vaultCount=()=>{const v=META.vault;let n=0;for(const it of ITEMS)if(v.own[it.id])n++;return n};
+const chestsHeld=()=>META.vault.chests.reduce((a,b)=>a+b,0);
+function buyChest(g){const C=CHESTS[g];if(META.crowns<C.price)return false;META.crowns-=C.price;META.vault.chests[g]++;saveMeta();return true}
+/* Open one chest. You never get something you already own while there is still something new to find; once the vault is complete, chests pay their price back. */
+function openChest(g){
+ const v=META.vault,C=CHESTS[g];if(!(v.chests[g]>0))return null;v.chests[g]--;
+ let roll=Math.random()*100,r=0;for(let i=0;i<4;i++){roll-=C.odds[i];if(roll<0){r=i;break}r=i}
+ const left=q=>ITEMS.filter(it=>it.r===q&&!v.own[it.id]);
+ let pool=left(r);for(let d=1;d<4&&!pool.length;d++){pool=left(r-d);if(!pool.length)pool=left(r+d)}
+ if(!pool.length){META.crowns+=C.price;saveMeta();return{full:1,refund:C.price}}
+ const it=pool[(Math.random()*pool.length)|0];v.own[it.id]=1;saveMeta();return{item:it};
+}
+function forgeItem(id){const it=ITEM[id],p=FORGE_PRICE[it.r];if(META.vault.own[id]||META.crowns<p)return false;META.crowns-=p;META.vault.own[id]=1;saveMeta();return true}
+function equipItem(id){const it=ITEM[id];if(!it||!META.vault.own[id])return false;META.vault.eq[it.k]=id;saveMeta();return true}
+/* ---------- wearing things ---------- */
+const _dpal={};
+function dragonPal(spec,skin){
+ const base=DPAL.own[spec==null?0:spec+1],it=ITEM[skin||vaultEq('dragon')];if(!it||!it.pal)return base;
+ const k=it.id+'|'+spec;return _dpal[k]||(_dpal[k]=Object.assign({},it.pal,{fire:base.fire}));
+}
+/* Repaint the finished castle picture in another stone: every pixel keeps its light and shade and takes its colour from the skin's ramp.
+   Lit windows and anything else glowing warm are left alone. */
+function skinCastle(cv,it){
+ const c=cv.getContext('2d');let im;try{im=c.getImageData(0,0,cv.width,cv.height)}catch(e){return}
+ const d=im.data,R4=it.ramp.map(col),w=cv.width;let hue=null;
+ if(it.opal){hue=[];for(let h=0;h<360;h++)hue.push(col(hsl2hex(h,.85,.72)))}
+ for(let i=0;i<d.length;i+=4){
+  if(!d[i+3])continue;const r=d[i],g=d[i+1],b=d[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+  if(mx>150&&(mx-mn)/mx>.5&&r>b)continue;
+  const lum=(.299*r+.587*g+.114*b)/255,t=clamp((lum-.05)/.6,0,1)*3,k=Math.min(2,t|0),f=t-k,A=R4[k],B=R4[k+1];
+  let nr=A[0]+(B[0]-A[0])*f,ng=A[1]+(B[1]-A[1])*f,nb=A[2]+(B[2]-A[2])*f;
+  if(hue){const p=i>>2,x=p%w,y=(p/w)|0,H=hue[((x*1.1+y*.7+Math.sin(y*.045)*60)%360+360)%360|0],m=.16+.3*lum;nr+=(H[0]-nr)*m;ng+=(H[1]-ng)*m;nb+=(H[2]-nb)*m}
+  d[i]=nr;d[i+1]=ng;d[i+2]=nb;
+ }
+ c.putImageData(im,0,0);
+}
+/* small pictures of items for the vault screen */
+const VaultArt={cache:{},
+ of(it){
+  if(this.cache[it.id])return this.cache[it.id];let h;
+  if(it.k==='castle')h='<span class="sw" style="background:linear-gradient(160deg,'+it.ramp[3]+' 0%,'+it.ramp[2]+' 38%,'+it.ramp[1]+' 72%,'+it.ramp[0]+' 100%)'+(it.opal?',linear-gradient(60deg,#ff9ad5,#9ad5ff,#b5ffa8,#fff3a8);background-blend-mode:soft-light':'')+'">'+ICONS.html('castle','rgba(10,8,16,.55)',34)+'</span>';
+  else if(it.k==='bolt')h='<span class="sw" style="background:radial-gradient(circle at 50% 40%,'+(it.prism?'#3a2a5a':'rgba(255,255,255,.14)')+',#0b0914)">'+ICONS.html('bolt',it.prism?'#ffffff':it.cols[0],36)+'<i style="background:'+(it.prism?'linear-gradient(90deg,#ff6b6b,#ffd166,#7dff8a,#6fb7ff,#c9a6ff)':'linear-gradient(90deg,'+it.cols.join(',')+')')+'"></i></span>';
+  else if(it.k==='aspect')h='<span class="sw" style="background:radial-gradient(circle at 50% 40%,'+rgba((it.cols||['#bfe1ff'])[0],.3)+',#0b0914)">'+ICONS.html(it.icon,(it.cols||['#bfe1ff'])[0],38)+'</span>';
+  else{const cv=document.createElement('canvas');cv.width=cv.height=96;drawDragon(cv.getContext('2d'),{x:50,y:60,sc:.6,face:1,t:.35,breath:0,pal:dragonPal(null,it.id),perch:0});h='<span class="sw" style="background:radial-gradient(circle at 50% 60%,#5d6f96,#2a3350)"><img alt="" src="'+cv.toDataURL()+'"></span>'}
+  return this.cache[it.id]=h;
+ }
+};
 /* ============ FRAME COMPOSITION ============ */
 R.vignette=null;
 R.makeVignette=function(){
@@ -3179,6 +3422,9 @@ R.drawGauge=function(c,ch){
  const bw=w-20,bx=lx-bw/2,by=ly+10,fill=clamp(ch.c/mx,0,1);
  c.fillStyle=rgba('#ffffff',.14);c.fillRect(bx,by,bw,5);c.fillStyle=over>0?'#ffffff':TIERS[Math.min(mx,tier+1)].col;c.fillRect(bx,by,bw*fill,5);
  c.fillStyle='#0b0914';for(let i=1;i<mx;i++)c.fillRect(bx+bw*i/mx-1,by,2,5);
+ // the three other ways to let go, shown until the player has used one
+ if(tier&&META.wound&&!META.flicked){const msg='Flick as you let go:  down = slam   sideways = throw   up = scatter';c.font='700 13px "Alegreya Sans",sans-serif';c.textAlign='center';const mw=c.measureText(msg).width+20,my2=clamp(ly-34,16,H-90),mx2=clamp(lx,WALL_X+mw/2+6,W-mw/2-6);
+  c.fillStyle=rgba('#0b0914',.78);c.beginPath();c.roundRect(mx2-mw/2,my2-11,mw,22,6);c.fill();c.fillStyle='#fff3c4';c.fillText(msg,mx2,my2+1)}
 };
 /* ============ INTERFACE ============ */
 const $=id=>document.getElementById(id);
@@ -3265,7 +3511,7 @@ const Tree={
 const UI={
  scale:1,panelSlot:-1,el:{},refT:0,nextKey:'',hintT:0,hintI:0,sheet:null,armNew:0,
  init(){
-  ['hud','wallBox','wallTxt','wallFill','waveTitle','waveSub','waveFill','waveBar','bossBar','bossName','bossFill','goldTxt','renTxt','btnTree','treeDot','btnSpeed','btnPause','btnAuto','btnSound','btnMenu','toasts','banner','bannerH','bannerP','pausedTag','hint','buildBar','nextLbl','nextChips','btnStart','btnRepair','btnFort','powers','panel','tip','relics','title','btnContinue','btnNew','btnLegacy','btnWaves','btnHow','titleFoot','crownPill','sheet','sheetBody','stage','cv','tree'].forEach(k=>this.el[k]=$(k));
+  ['hud','wallBox','wallTxt','wallFill','waveTitle','waveSub','waveFill','waveBar','bossBar','bossName','bossFill','goldTxt','renTxt','btnTree','treeDot','btnSpeed','btnPause','btnAuto','btnSound','btnMenu','toasts','banner','bannerH','bannerP','pausedTag','hint','buildBar','nextLbl','nextChips','btnStart','btnRepair','btnFort','powers','panel','tip','relics','title','btnContinue','btnNew','btnLegacy','btnWaves','btnHow','btnVault','vaultPill','btnProfile','titleFoot','crownPill','sheet','sheetBody','stage','cv','tree'].forEach(k=>this.el[k]=$(k));
   const e=this.el;
   $('wallIc').src=ICONS.url('castle','#efe6d2');$('goldIc').innerHTML=ICONS.html('coin','#f2c14e',18);$('renIc').innerHTML=ICONS.html('renown','#9fd8ff',17);
   e.btnPause.innerHTML=ICONS.html('pause','#efe6d2',14);
@@ -3284,6 +3530,8 @@ const UI={
   e.btnNew.onclick=()=>{if(hasSave()&&!this.armNew){this.armNew=1;e.btnNew.innerHTML='<span>Abandon the saved run?</span><span class="pill">click again</span>';return}this.armNew=0;Store.del('htw_run');this.begin(false)};
   e.btnContinue.onclick=()=>this.begin(true);
   e.btnLegacy.onclick=()=>this.showLegacy();
+  e.btnVault.onclick=()=>this.showVault();
+  e.btnProfile.onclick=()=>this.showProfiles();
   e.btnWaves.onclick=()=>this.showWaves();
   e.btnHow.onclick=()=>this.showHelp();
   e.panel.addEventListener('pointerdown',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;ev.preventDefault();this.act(b.dataset.act,b.dataset.arg)});
@@ -3303,6 +3551,8 @@ const UI={
   const s=Store.get('htw_run',null);if(s&&s.v===2){e.btnContinue.hidden=false;e.btnContinue.innerHTML='<span>Continue</span><span class="pill" style="color:#1a1206;background:rgba(255,255,255,.35)">wave '+(s.wave+1)+'</span>'}else e.btnContinue.hidden=true;
   e.btnWaves.hidden=!(META.best>=1);$('wavePill').textContent='up to '+maxStartWave();
   e.crownPill.textContent=META.crowns+' crown'+(META.crowns===1?'':'s');
+  {const n=chestsHeld();e.vaultPill.textContent=n?n+' chest'+(n===1?'':'s')+' to open':vaultCount()+' of '+ITEMS.length;e.vaultPill.style.background=n?'var(--danger)':'';e.vaultPill.style.color=n?'#fff':''}
+  e.btnProfile.innerHTML='Playing as <b>'+Profiles.cur().name+'</b> · change';
   e.titleFoot.textContent=META.best?'Best: held '+META.best+' wave'+(META.best===1?'':'s')+'  ·  '+META.runs+' run'+(META.runs===1?'':'s')+' ended':'No wall has fallen yet.';
  },
  begin(cont,at){
@@ -3311,7 +3561,7 @@ const UI={
   this.refresh(true);this.renderPanel();SFX.click();
   if(G.wave===0)this.banner('Night falls','Recruit defenders, then sound the horn.',null);
   else if(at)this.banner('Wave '+(G.wave+1)+' is coming',at.own&&G.slots.some(u=>u)&&G.startWave===G.wave&&checkpoints()[G.wave]?'Your castle stands as you left it.':'A bare wall and a war chest. Spend it well.',null);
-  if(META.news!==3){META.news=3;saveMeta();if(META.runs>0||META.best>0)setTimeout(()=>{this.toast('New: hold and draw circles to charge your lightning, then let go','#bfe1ff');this.toast('New: every sound in the game has been rebuilt','#c9a6ff');this.toast('New: the dragon has been redrawn','#ef6f5a')},1800)}
+  if(META.news!==4){const old=META.runs>0||META.best>0;META.news=4;saveMeta();if(old)setTimeout(()=>{this.toast('New: flick as you let go of a charge. Down slams, sideways throws, up scatters.','#bfe1ff');this.toast('New: The Vault on the title screen. Chests, castle skins, new elements.','#f2c14e');this.toast('New: profiles, so more than one person can play on this device','#9fb0c8')},1800)}
   if(G.relicChoice)setTimeout(()=>this.showRelics(),600);
  },
  /* ----- transient messages ----- */
@@ -3456,6 +3706,17 @@ const UI={
   else if(a==='title'){this.closeSheet();G.phase='x';this.showTitle()}
   else if(a==='new'){this.closeSheet();Store.del('htw_run');this.begin(false)}
   else if(a==='legacy')this.showLegacy();
+  else if(a==='vault')this.showVault();
+  else if(a==='vtab')this.showVault(arg);
+  else if(a==='vbuy'){if(buyChest(+arg)){SFX.buy();this.showVault()}else SFX.err()}
+  else if(a==='vopen')this.openChestUI(+arg);
+  else if(a==='vforge'){if(forgeItem(arg)){SFX.up();equipItem(arg);this.showVault(ITEM[arg].k)}else SFX.err()}
+  else if(a==='vequip'){if(equipItem(arg)){SFX.recruit();this.showVault(ITEM[arg].k)}}
+  else if(a==='profiles')this.showProfiles();
+  else if(a==='puse')this.switchProfile(arg);
+  else if(a==='padd'){const n=Profiles.clean($('pNew').value);if(!n){SFX.err();return}Profiles.add(n);this.switchProfile(Profiles.data.cur)}
+  else if(a==='prename'){const n=Profiles.clean($('pName').value);if(!n){SFX.err();return}Profiles.rename(n);this.showProfiles();this.el.btnProfile.innerHTML='Playing as <b>'+Profiles.cur().name+'</b> · change'}
+  else if(a==='pdel'){if(this.armDel!==arg){this.armDel=arg;this.showProfiles();return}this.armDel=null;Profiles.remove(arg);this.showProfiles()}
   else if(a==='help')this.showHelp();
   else if(a==='perk'){const p=LEGACY.find(x=>x.id===arg),l=leg(arg),c=legacyCost(l);if(l<p.max&&META.crowns>=c){META.crowns-=c;META.legacy[arg]=l+1;saveMeta();SFX.research();this.showLegacy()}else SFX.err()}
   else if(a==='relic'){takeRelic(arg);this.closeSheet();this.toast('Relic claimed: '+RELIC[arg].name,'#f2c14e');this.refresh(true);if(G.relicChoice)setTimeout(()=>{if(G.relicChoice&&!this.sheet)this.showRelics()},420)}
@@ -3474,12 +3735,12 @@ const UI={
  showHelp(){
   this.openSheet('<h2>How to play</h2><p class="dim">Enemies come from the right. Your wall is on the left. If the wall falls, the run ends.</p><div class="cols">'+
   '<div><h3>Defenders</h3><p>Click a glowing marker on the castle to recruit. Click a defender to upgrade, change what they shoot at, or dismiss them. At level 3 a defender can specialise, once you have researched their school.</p>'+
-  '<h3>Your own hand</h3><p>A quick tap on the field throws a Spark. For the real thing, <b>hold down and draw circles</b>: the charge winds up through Bolt and Thunderbolt, and the ring round your pointer shows how far it has got. <b>Let go</b> and it comes down where you are pointing. A level you have reached is kept for as long as you hold, so you can wind up and then wait for the moment. Keys 2 to 7 are the powers you unlock in Research, ready again at the start of every wave.</p>'+
+  '<h3>Your own hand</h3><p>A quick tap on the field throws a Spark. For the real thing, <b>hold down and draw circles</b>: the charge winds up through Bolt and Thunderbolt, and the ring round your pointer shows how far it has got. <b>Let go</b> and it comes down where you are pointing. A level you have reached is kept for as long as you hold, so you can wind up and then wait for the moment. <b>How you let go matters:</b> hold still and it strikes that spot; flick <b>down</b> to slam it into the ground, wider but softer; flick <b>sideways</b> to throw it as a lance through everything in the way; flick <b>up</b> to scatter it into small bolts that hunt flyers first. Keys 2 to 7 are the powers you unlock in Research, ready again at the start of every wave.</p>'+
   '<h3>Night and day</h3><p>Between waves it is night. Build, repair, research, then press Space. Nothing attacks until you do.</p></div>'+
   '<div><h3>Research</h3><p>Renown buys nodes on the tree. Every node you take reveals the ones behind it, so the tree keeps opening outward in five directions: Masonry, Garrison, Arcana, Treasury and Barracks.</p>'+
   '<h3>Know your enemy</h3><p>Hover the icons in the Next Wave box. Shields stop arrows. Armour stops light hits. Flyers ignore the ground. Siege engines out-range you. Every problem has an answer somewhere in the tree.</p>'+
   '<h3>Bosses and relics</h3><p>Every fifth wave brings a boss. Kill it and you choose one of three relics for the rest of the run. Some waves also arrive with a twist, shown beside the wave name.</p>'+
-  '<h3>Legacy</h3><p>When the wall falls you earn crowns for how far you got. Crowns buy permanent perks for every future run.</p></div></div>'+
+  '<h3>Legacy and the Vault</h3><p>When the wall falls you earn crowns for how far you got. Crowns buy permanent perks in Legacy, and chests in the Vault: castle stone, lightning colours, dragon hides, and new elements for your hand that fight differently from lightning.</p></div></div>'+
   '<h3>Keys</h3><p><b>Space</b> start wave &nbsp; <b>T</b> research &nbsp; <b>1 to 7</b> powers &nbsp; <b>F</b> speed &nbsp; <b>P</b> pause &nbsp; <b>A</b> auto-start &nbsp; <b>R</b> repair &nbsp; <b>M</b> sound &nbsp; <b>Esc</b> or right-click drops a charge, cancels, or opens the menu</p>'+
   '<div class="rowr">'+(G.phase==='title'?'<button class="btn" type="button" data-go="transfer">Move save to another device</button>':'')+this.backBtn()+'</div>','help');
  },
@@ -3492,14 +3753,14 @@ const UI={
  },
  loadCode(txt){
   try{const o=JSON.parse(decodeURIComponent(escape(atob(String(txt).trim()))));if(!o||o.htw!==1||!o.run||o.run.v!==2)throw 0;
-   Store.set('htw_run',o.run);if(o.meta){const m=Object.assign({},Store.get('htw_meta',{})||{});m.crowns=Math.max(m.crowns||0,o.meta.crowns||0);m.best=Math.max(m.best||0,o.meta.best||0);m.legacy=Object.assign({},m.legacy||{},o.meta.legacy||{});m.seen=Object.assign({},m.seen||{},o.meta.seen||{});Object.assign(META,m);saveMeta()}
+   Store.set('htw_run',o.run);if(o.meta){const m=Object.assign({},Store.get('htw_meta',{})||{});m.crowns=Math.max(m.crowns||0,o.meta.crowns||0);m.best=Math.max(m.best||0,o.meta.best||0);m.legacy=Object.assign({},m.legacy||{},o.meta.legacy||{});m.seen=Object.assign({},m.seen||{},o.meta.seen||{});if(o.meta.vault){const a=m.vault||{own:{},eq:{},chests:[0,0,0],ms:0},b=o.meta.vault;a.own=Object.assign({},a.own,b.own||{});a.ms=Math.max(a.ms||0,b.ms||0);a.chests=[0,1,2].map(i=>Math.max((a.chests||[])[i]||0,(b.chests||[])[i]||0));m.vault=a}Object.assign(META,m);vaultInit();saveMeta()}
    this.closeSheet();G.phase='x';this.showTitle();this.toast('Save loaded. Press Continue.','#f2c14e')}
   catch(e){SFX.err();this.toast('That code did not work. Copy the whole thing.')}
  },
  showMenu(){
   if(G.phase==='title'||G.phase==='defeat')return;
   this.openSheet('<h2>Paused</h2><p class="dim">Wave '+G.wave+'  ·  '+BIOMES[G.biome].name+'  ·  '+G.stats.kills+' kills so far. Your run saves itself every night.</p>'+
-  '<div class="rowr" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn primary big" type="button" data-go="close">Back to the wall</button><button class="btn big" type="button" data-go="help">How to play</button><button class="btn big" type="button" data-go="music">Music: '+(META.music?'on':'off')+'</button><button class="btn big" type="button" data-go="haptic">Vibration: '+(META.haptic===false?'off':'on')+'</button><button class="btn big" type="button" data-go="transfer">Move save to another device</button><button class="btn big" type="button" data-go="quality">Effects: '+(R.lowFx?'reduced':'full')+'</button><button class="btn big ghost" type="button" data-go="title">Save and quit to title</button></div>','menu');
+  '<div class="rowr" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn primary big" type="button" data-go="close">Back to the wall</button><button class="btn big" type="button" data-go="help">How to play</button><button class="btn big" type="button" data-go="vault">The Vault</button><button class="btn big" type="button" data-go="music">Music: '+(META.music?'on':'off')+'</button><button class="btn big" type="button" data-go="haptic">Vibration: '+(META.haptic===false?'off':'on')+'</button><button class="btn big" type="button" data-go="transfer">Move save to another device</button><button class="btn big" type="button" data-go="quality">Effects: '+(R.lowFx?'reduced':'full')+'</button><button class="btn big ghost" type="button" data-go="title">Save and quit to title</button></div>','menu');
  },
  /* what actually brought the wall down in the last wave */
  recap(){
@@ -3543,6 +3804,46 @@ const UI={
   h+='<p class="dim" style="font-size:12.5px">Crowns only count for waves you clear after the one you start on.'+(hasSave()?' Starting here replaces the run saved under Continue.':'')+'</p>';
   h+='<div class="rowr"><button class="btn" type="button" data-go="'+(G.phase==='defeat'?'title':'close')+'">Back</button><button class="btn primary big" type="button" data-go="wgo">Start at wave '+W+'</button></div>';
   this.openSheet(h,'waves');
+ },
+ /* ----- the vault ----- */
+ showVault(tab){
+  this.vtab=tab||this.vtab||'castle';const v=META.vault,t=this.vtab,odds=['Mostly common finds. Legendary: 1 in 200.','Rare or better two times in three. Legendary: 3 in 100.','Never common. Legendary: 13 in 100.'];
+  let h='<div class="vhead"><div><h2>The Vault</h2><p class="dim">Everything in here is earned by playing. Crowns buy chests, and every fifth wave of a new best run leaves one for free.</p></div><div class="vcr">'+ICONS.html('crown','#f2c14e',22)+' <b class="goldc">'+META.crowns+'</b> <span class="dim">crowns<br>'+vaultCount()+' of '+ITEMS.length+' found</span></div></div><div class="chests">';
+  CHESTS.forEach((C,g)=>{const n=v.chests[g],can=META.crowns>=C.price;
+   h+='<div class="chest" style="--cc:'+C.col+'"><div class="ctop"><div class="cico">'+ICONS.html('chest',C.col,40)+(n?'<b>'+n+'</b>':'')+'</div><div><h4>'+C.name+'</h4><p>'+odds[g]+'</p></div></div><div class="cbtn">'+(n?'<button class="btn primary" type="button" data-go="vopen" data-arg="'+g+'">Open</button>':'')+'<button class="btn small'+(can?'':' off')+'" type="button" data-go="vbuy" data-arg="'+g+'">Buy · '+C.price+' crowns</button></div></div>'});
+  h+='</div><div class="seg vtabs">';
+  for(const k in ITEM_KINDS){const all=ITEMS.filter(i=>i.k===k),got=all.filter(i=>v.own[i.id]).length;h+='<button type="button" class="'+(k===t?'on':'')+'" data-go="vtab" data-arg="'+k+'">'+ITEM_KINDS[k].name+' · '+got+'/'+all.length+'</button>'}
+  h+='</div><p class="dim">'+ITEM_KINDS[t].blurb+'</p><div class="vgrid">';
+  for(const it of ITEMS.filter(i=>i.k===t)){const own=v.own[it.id],eq=v.eq[t]===it.id,Rr=RARITY[it.r],fp=FORGE_PRICE[it.r];
+   h+='<div class="vitem'+(own?'':' locked')+(eq?' eq':'')+'" style="--rc:'+Rr.col+'">'+VaultArt.of(it)+'<h4>'+it.name+'</h4><span class="rar">'+Rr.name+'</span><p>'+it.desc+'</p>'+
+    (eq?'<button class="btn small off" type="button">Equipped</button>':own?'<button class="btn small primary" type="button" data-go="vequip" data-arg="'+it.id+'">Equip</button>':'<button class="btn small'+(META.crowns>=fp?'':' off')+'" type="button" data-go="vforge" data-arg="'+it.id+'">Buy outright · '+fp+'</button>')+'</div>'}
+  h+='</div><div class="rowr">'+this.backBtn()+'</div>';
+  this.openSheet(h,'vault');if(G.phase==='title')this.showTitlePills();
+ },
+ showTitlePills(){const e=this.el,n=chestsHeld();e.crownPill.textContent=META.crowns+' crown'+(META.crowns===1?'':'s');e.vaultPill.textContent=n?n+' chest'+(n===1?'':'s')+' to open':vaultCount()+' of '+ITEMS.length;e.vaultPill.style.background=n?'var(--danger)':'';e.vaultPill.style.color=n?'#fff':''},
+ openChestUI(g){
+  const res=openChest(g);if(!res){SFX.err();return}
+  if(res.full){SFX.coin();this.toast('Your vault is complete. '+res.refund+' crowns returned.','#f2c14e');this.showVault();return}
+  const it=res.item,Rr=RARITY[it.r],left=META.vault.chests[g];
+  SFX.chest();setTimeout(()=>{it.r>=3?SFX.relic():it.r===2?SFX.spec():it.r===1?SFX.up():SFX.buy()},260);Haptic(it.r>=2?[20,40,60]:25);
+  this.openSheet('<div class="reveal" style="--rc:'+Rr.col+'"><div class="lbl">'+CHESTS[g].name+'</div><div class="rcard">'+VaultArt.of(it)+'</div><span class="rar">'+Rr.name+' · '+ITEM_KINDS[it.k].name+'</span><h2>'+it.name+'</h2><p>'+it.desc+'</p>'+
+   '<div class="rowr" style="justify-content:center;flex-wrap:wrap"><button class="btn primary big" type="button" data-go="vequip" data-arg="'+it.id+'">Equip it</button>'+(left>0?'<button class="btn big" type="button" data-go="vopen" data-arg="'+g+'">Open another ('+left+')</button>':'')+'<button class="btn big" type="button" data-go="vtab" data-arg="'+it.k+'">Back to the vault</button></div></div>','vault');
+  if(G.phase==='title')this.showTitlePills();
+ },
+ /* ----- profiles ----- */
+ showProfiles(){
+  const P=Profiles.data,cur=Profiles.cur();
+  let h='<h2>Who is playing?</h2><p class="dim">Each profile keeps its own run, crowns, legacy and vault. Profiles live in this browser on this device: a friend playing on their own phone already has their own save and does not need one here.</p><div class="plist">';
+  for(const p of P.list){const on=p.id===P.cur;let m=on?META:null;if(!on){try{m=JSON.parse(localStorage.getItem(p.id+'htw_meta'))}catch(e){}}m=m||{};
+   h+='<div class="prow'+(on?' on':'')+'"><b>'+p.name+'</b><span class="dim">best wave '+(m.best||0)+' · '+(m.crowns||0)+' crowns</span>'+(on?'<span class="pill">playing</span>':'<button class="btn small primary" type="button" data-go="puse" data-arg="'+p.id+'">Play as '+p.name+'</button><button class="btn small danger" type="button" data-go="pdel" data-arg="'+p.id+'">'+(this.armDel===p.id?'Really delete? Tap again':'Delete')+'</button>')+'</div>'}
+  h+='</div><h3>Your name</h3><div class="pform"><input id="pName" maxlength="16" autocomplete="off" value="'+cur.name+'"><button class="btn" type="button" data-go="prename">Save name</button></div>'+
+   '<h3>Add someone</h3><div class="pform"><input id="pNew" maxlength="16" autocomplete="off" placeholder="Their name"><button class="btn primary" type="button" data-go="padd">Add profile</button></div>'+
+   '<div class="rowr"><button class="btn" type="button" data-go="close">Back</button></div>';
+  this.openSheet(h,'profiles');
+ },
+ switchProfile(id){
+  Profiles.use(id);loadMeta();SFX.setOn(META.sound);SFX.setMusic(META.music);R.castleKey='';this.armDel=null;
+  this.closeSheet();G.phase='x';this.showTitle();this.toast('Playing as '+Profiles.cur().name,'#f2c14e');
  },
  showLegacy(){
   let h='<h2>Legacy</h2><p class="dim">Crowns are earned when a wall falls: one per wave held, three per boss slain. What you buy here lasts for every run to come.</p><p style="font-size:18px">'+ICONS.html('crown','#f2c14e',22)+' <b class="goldc">'+META.crowns+' crowns</b></p><div class="perks">';
@@ -3604,7 +3905,7 @@ function boot(){
   // if the machine cannot keep up, quietly drop to the lighter effects setting
   if(raw<.25){ema=ema*.97+raw*.03;warm+=raw;if(!R.lowFx&&warm>6&&ema>.034&&!Tree.open){R.lowFx=true;UI.fit();if(G.phase!=='title')UI.toast('Effects reduced to keep the battle smooth')}}
   if(G.slow>0)G.slow-=dt;
-  const halted=G.paused||Tree.open||UI.sheet==='menu'||UI.sheet==='transfer'||(UI.sheet==='help'&&G.phase!=='title');
+  const halted=G.paused||Tree.open||UI.sheet==='menu'||UI.sheet==='transfer'||UI.sheet==='vault'||(UI.sheet==='help'&&G.phase!=='title');
   const tm=G.phase==='title'?1:halted?0:G.speed*(G.slow>0?.3:1),sim=dt*tm;
   // a charge only lives while the battlefield is in front of the player
   if(G.ch.on&&(!playing()||Tree.open||UI.sheet))chargeCancel();
